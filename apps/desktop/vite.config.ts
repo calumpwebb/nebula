@@ -19,10 +19,10 @@ export default defineConfig(async () => ({
   //
   // 1. prevent Vite from obscuring rust errors
   clearScreen: false,
-  // 2. tauri expects a fixed port, fail if that port is not available
+  // 2. tauri dev server
   server: {
     port: 1420,
-    strictPort: true,
+    strictPort: false,  // Allow fallback to next available port
     host: host || false,
     hmr: host
       ? {
