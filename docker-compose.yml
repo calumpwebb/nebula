@@ -1,0 +1,24 @@
+services:
+  temporal:
+    image: temporalio/auto-setup:1.25
+    ports:
+      - "7233:7233"   # gRPC
+      - "8233:8233"   # Web UI
+    environment:
+      - DB=sqlite
+      - SKIP_SCHEMA_SETUP=false
+      - TEMPORAL_ADDRESS=temporal:7233
+    volumes:
+      - temporal-data:/var/lib/temporal
+
+  convex:
+    image: convex/convex-local-backend:latest
+    ports:
+      - "3210:3210"   # Backend
+      - "3211:3211"   # Dashboard
+    volumes:
+      - convex-data:/convex/data
+
+volumes:
+  temporal-data:
+  convex-data:

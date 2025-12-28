@@ -1,0 +1,19 @@
+{
+  "name": "@nebula/convex",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "convex dev --local",
+    "check": "[ -d convex/_generated ] && tsc --noEmit || echo 'Run convex dev first to generate types'",
+    "lint": "eslint convex/",
+    "test": "echo 'No tests yet'"
+  },
+  "dependencies": {
+    "@nebula/shared": "workspace:*",
+    "convex": "^1.17.4"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.2"
+  }
+}

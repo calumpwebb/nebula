@@ -1,0 +1,16 @@
+{
+  "name": "@nebula/desktop",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "echo 'Desktop app not yet set up - run tauri init when ready'",
+    "build": "echo 'Desktop app not yet set up'",
+    "check": "echo 'Desktop app not yet set up'",
+    "lint": "echo 'Desktop app not yet set up'",
+    "test": "echo 'Desktop app not yet set up'"
+  },
+  "dependencies": {
+    "@nebula/shared": "workspace:*"
+  }
+}
