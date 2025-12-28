@@ -4,7 +4,7 @@ This file provides guidance to Claude Code when working with code in this reposi
 
 ## Project Overview
 
-Nebula is a developer HUD for AI-assisted coding. TypeScript monorepo with:
+Project Nebula is a developer HUD for AI-assisted coding. TypeScript monorepo with:
 - **Convex** - Real-time backend (local self-hosted)
 - **Temporal** - Workflow orchestration for missions
 - **Tauri** - Desktop app (not yet set up)
