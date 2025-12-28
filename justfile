@@ -1,9 +1,9 @@
 # Nebula development commands
 
-# Start everything (Docker infra + app code)
+# Start everything (Docker infra + services + desktop app)
 up:
     docker compose up -d
-    pnpm turbo dev
+    pnpm turbo dev & cd apps/desktop && pnpm tauri dev
 
 # Stop everything
 down:
@@ -30,3 +30,7 @@ test:
 # Build all packages
 build:
     pnpm turbo build
+
+# Build desktop app for production
+desktop-build:
+    cd apps/desktop && pnpm tauri build

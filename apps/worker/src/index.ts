@@ -21,7 +21,7 @@ async function run() {
   const worker = await Worker.create({
     connection,
     namespace: config.namespace,
-    workflowsPath: new URL('./workflows/index.js', import.meta.url).pathname,
+    workflowsPath: new URL('./workflows/index.ts', import.meta.url).pathname,
     activities,
     taskQueue: config.taskQueue,
   })

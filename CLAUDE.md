@@ -7,19 +7,20 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 Project Nebula is a developer HUD for AI-assisted coding. TypeScript monorepo with:
 - **Convex** - Real-time backend (local self-hosted)
 - **Temporal** - Workflow orchestration for missions
-- **Tauri** - Desktop app (not yet set up)
+- **Tauri** - Desktop app (React + TailwindCSS)
 
 ## Commands
 
 ```bash
-just up      # Start Docker (Temporal + Convex) + dev servers
-just down    # Stop everything
-just clean   # Delete Docker volumes (fresh start)
+just up            # Start Docker + dev servers + desktop app
+just down          # Stop everything
+just clean         # Delete Docker volumes (fresh start)
 
-just check   # Type-check all packages
-just lint    # Lint everything
-just test    # Run tests
-just build   # Production build
+just check         # Type-check all packages
+just lint          # Lint everything
+just test          # Run tests
+just build         # Production build
+just desktop-build # Build desktop app for production
 ```
 
 ### Single-package commands
@@ -36,7 +37,7 @@ pnpm turbo build --filter=@nebula/convex   # Build convex only
 
 ```
 apps/
-  desktop/     # Tauri + React (placeholder)
+  desktop/     # Tauri 2 + React + TailwindCSS (Geist font, dark theme)
   worker/      # Temporal worker (mission workflows)
 
 packages/

@@ -27,7 +27,7 @@ function App() {
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col items-center justify-center">
-        <Rocket className="w-16 h-16 text-primary opacity-50 mb-4" />
+        <Rocket className="w-16 h-16 text-white opacity-50 mb-4" />
         <h1 className="text-2xl font-semibold text-foreground mb-2">
           Project Nebula
         </h1>

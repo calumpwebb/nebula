@@ -1,20 +1,41 @@
 services:
+  temporal-db:
+    image: postgres:16-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: temporal
+      POSTGRES_PASSWORD: temporal
+      POSTGRES_DB: temporal
+    volumes:
+      - temporal-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U temporal"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
   temporal:
     image: temporalio/auto-setup:1.25
     ports:
       - "7233:7233"   # gRPC
       - "8233:8233"   # Web UI
     environment:
-      - DB=sqlite
+      - DB=postgres12
+      - DB_PORT=5432
+      - POSTGRES_USER=temporal
+      - POSTGRES_PWD=temporal
+      - POSTGRES_SEEDS=temporal-db
       - SKIP_SCHEMA_SETUP=false
-      - TEMPORAL_ADDRESS=temporal:7233
-    volumes:
-      - temporal-data:/var/lib/temporal
+    depends_on:
+      temporal-db:
+        condition: service_healthy
     healthcheck:
-      test: ["CMD", "temporal", "operator", "cluster", "health"]
+      test: ["CMD-SHELL", "curl -sf http://localhost:7233/health || exit 1"]
       interval: 5s
       timeout: 5s
-      retries: 10
+      retries: 20
+      start_period: 60s
 
   worker:
     build:
@@ -43,5 +64,5 @@ services:
       - convex-data:/convex/data
 
 volumes:
-  temporal-data:
+  temporal-db-data:
   convex-data:

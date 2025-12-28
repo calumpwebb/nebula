@@ -2,13 +2,14 @@
 
 # Temporal worker Dockerfile
 # Multi-stage build for development and production
+# Note: Using slim (Debian) instead of alpine due to Temporal native module glibc requirements
 
 ARG NODE_VERSION=22
 
 # =============================================================================
 # Base stage: shared dependencies
 # =============================================================================
-FROM node:${NODE_VERSION}-alpine AS base
+FROM node:${NODE_VERSION}-slim AS base
 
 # Install pnpm
 RUN corepack enable && corepack prepare pnpm@9 --activate
