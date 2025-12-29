@@ -1,19 +1,17 @@
 # Nebula development commands
 
-# Start everything (Docker infra + services + desktop app)
+# Start everything (creates cluster if needed)
 up:
-    docker compose up -d
-    pnpm turbo dev & cd apps/desktop && pnpm tauri dev
+    cd infra && tilt up
 
-# Stop everything
+# Stop services (keeps cluster)
 down:
-    docker compose down
-    pkill -f "turbo dev" || true
+    cd infra && tilt down
 
-# Stop and delete all Docker data
-clean:
-    docker compose down -v
-    rm -rf node_modules/.cache/.turbo
+# Full reset (delete cluster + registry)
+reset:
+    cd infra && tilt down || true
+    ctlptl delete -f infra/ctlptl.yaml || true
 
 # Type-check all packages
 check:
