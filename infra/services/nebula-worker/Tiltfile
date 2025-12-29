@@ -1,0 +1,21 @@
+load('../../lib/Tiltfile', 'nebula_service')
+
+docker_build(
+    'nebula-registry:5000/nebula-worker',
+    '../..',
+    dockerfile='../../apps/worker/Dockerfile',
+    target='development',
+    live_update=[
+        sync('../../apps/worker/src', '/app/apps/worker/src'),
+        sync('../../packages/shared/src', '/app/packages/shared/src'),
+    ],
+)
+
+k8s_yaml('./k8s.yaml')
+
+k8s_resource(
+    'nebula-worker',
+    port_forwards=['8081:8080'],
+    resource_deps=['temporal'],
+    labels=['app'],
+)
