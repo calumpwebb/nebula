@@ -8,8 +8,8 @@ dist/
 # Convex
 .convex/
 
-# Tauri
-src-tauri/target/
+# Tauri / Rust
+**/target/
 
 # Environment
 .env
