@@ -50,3 +50,9 @@ Plans: `docs/plans/YYYY-MM-DD-<feature>.md`
 
 ## Documentation
 Index: `docs/KNOWLEDGE_BASE.md`
+
+## Desktop Icons
+Icons must be **8-bit RGBA PNG** (non-interlaced). CI fails on other formats.
+
+## Memory
+"Update your memory" = edit this CLAUDE.md file. Commit after every task completion.
