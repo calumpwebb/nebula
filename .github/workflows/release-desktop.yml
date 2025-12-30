@@ -205,6 +205,6 @@ jobs:
           draft: false
           prerelease: false
           files: |
-            artifacts/macos/*
-            artifacts/linux/*
+            artifacts/macos/**/*
+            artifacts/linux/**/*
             artifacts/latest.json
