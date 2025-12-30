@@ -8,8 +8,16 @@ import { authClient } from "./lib/auth-client";
 import { router } from "./router";
 import "./styles/globals.css";
 
+declare const __APP_VERSION__: string;
+
 // Forward console.log/error/etc to Rust logger
-attachConsole();
+attachConsole().then(() => {
+  console.info(`[frontend] Project Nebula v${__APP_VERSION__} starting...`);
+  console.info(`[frontend] Convex URL: ${import.meta.env.VITE_CONVEX_URL}`);
+}).catch((err) => {
+  // Fallback if attachConsole fails (e.g., not in Tauri context)
+  console.error("[frontend] Failed to attach console:", err);
+});
 
 const convex = new ConvexReactClient(
   import.meta.env.VITE_CONVEX_URL as string,

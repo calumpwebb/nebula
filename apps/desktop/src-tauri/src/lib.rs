@@ -2,6 +2,8 @@ mod updater;
 
 use tauri_plugin_log::{Target, TargetKind};
 
+const VERSION: &str = env!("CARGO_PKG_VERSION");
+
 #[tauri::command]
 fn greet(name: &str) -> String {
     format!("Hello, {}! You've been greeted from Rust!", name)
@@ -22,6 +24,8 @@ pub fn run() {
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_updater::Builder::new().build())
         .setup(|app| {
+            log::info!("Project Nebula v{} starting...", VERSION);
+
             let handle = app.handle().clone();
 
             // Run update check before showing window
