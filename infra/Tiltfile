@@ -24,5 +24,4 @@ local_resource(
     deps=['../apps/desktop/src'],
     labels=['app'],
     resource_deps=['convex-backend', 'nebula-worker'],
-    auto_init=False,
 )
