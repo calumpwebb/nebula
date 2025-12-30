@@ -2,7 +2,7 @@
 
 import { App, Chart } from 'cdk8s'
 import { KubeDeployment, KubeService, KubeConfigMap, KubePersistentVolumeClaim, IntOrString, Quantity } from 'cdk8s-plus-27/lib/imports/k8s'
-import type { AppDefinition } from './types'
+import type { AppDefinition, ProbeConfig } from './types'
 import * as fs from 'fs'
 import * as path from 'path'
 
@@ -17,6 +17,29 @@ const STANDARDS = {
   team: 'nebula',
   // TODO(NEBULA-9lt): Add staging/production support
   environment: 'dev',
+}
+
+/** Build probe spec from config */
+function buildProbe(probeConfig: ProbeConfig | undefined, initialDelay: number, period: number) {
+  // Explicit false = no probe
+  if (probeConfig === false) return undefined
+
+  // Default to HTTP /health:8080
+  const config = probeConfig ?? { type: 'http' as const, path: STANDARDS.healthPath, port: STANDARDS.healthPort }
+
+  if (config.type === 'tcp') {
+    return {
+      tcpSocket: { port: IntOrString.fromNumber(config.port) },
+      initialDelaySeconds: initialDelay,
+      periodSeconds: period,
+    }
+  }
+
+  return {
+    httpGet: { path: config.path, port: IntOrString.fromNumber(config.port) },
+    initialDelaySeconds: initialDelay,
+    periodSeconds: period,
+  }
 }
 
 export function generateK8sResources(
@@ -93,6 +116,15 @@ export function generateK8sResources(
     }
   }
 
+  // Build probes from config
+  const readinessProbe = buildProbe(config.probe, STANDARDS.readinessInitialDelay, STANDARDS.readinessPeriod)
+  const livenessProbe = buildProbe(config.probe, STANDARDS.livenessInitialDelay, STANDARDS.livenessPeriod)
+
+  // Determine container port from probe config or default
+  const containerPort = config.probe === false
+    ? STANDARDS.healthPort
+    : config.probe?.port ?? STANDARDS.healthPort
+
   // Create Deployment
   new KubeDeployment(chart, `${name}-deployment`, {
     metadata: { name, labels },
@@ -106,18 +138,10 @@ export function generateK8sResources(
             name,
             image,
             imagePullPolicy: 'IfNotPresent',
-            ports: [{ containerPort: STANDARDS.healthPort, name: 'health' }],
+            ports: [{ containerPort, name: 'app' }],
             env: Object.entries(env).map(([n, value]) => ({ name: n, value: String(value) })),
-            readinessProbe: {
-              httpGet: { path: STANDARDS.healthPath, port: IntOrString.fromNumber(STANDARDS.healthPort) },
-              initialDelaySeconds: STANDARDS.readinessInitialDelay,
-              periodSeconds: STANDARDS.readinessPeriod,
-            },
-            livenessProbe: {
-              httpGet: { path: STANDARDS.healthPath, port: IntOrString.fromNumber(STANDARDS.healthPort) },
-              initialDelaySeconds: STANDARDS.livenessInitialDelay,
-              periodSeconds: STANDARDS.livenessPeriod,
-            },
+            ...(readinessProbe ? { readinessProbe } : {}),
+            ...(livenessProbe ? { livenessProbe } : {}),
             ...(volumeMounts.length > 0 ? { volumeMounts } : {}),
           }],
           ...(volumes.length > 0 ? { volumes } : {}),
@@ -131,7 +155,7 @@ export function generateK8sResources(
     metadata: { name, labels },
     spec: {
       selector: { app: name },
-      ports: [{ port: STANDARDS.healthPort, targetPort: IntOrString.fromNumber(STANDARDS.healthPort) }],
+      ports: [{ port: containerPort, targetPort: IntOrString.fromNumber(containerPort) }],
     },
   })
 

@@ -8,6 +8,25 @@ export interface StorageConfig {
   size: string
 }
 
+/** HTTP probe configuration */
+export interface HttpProbeConfig {
+  type: 'http'
+  /** HTTP path to probe (e.g., '/health') */
+  path: string
+  /** Port to probe */
+  port: number
+}
+
+/** TCP probe configuration */
+export interface TcpProbeConfig {
+  type: 'tcp'
+  /** Port to probe */
+  port: number
+}
+
+/** Probe configuration - HTTP, TCP, or disabled */
+export type ProbeConfig = HttpProbeConfig | TcpProbeConfig | false
+
 /** Base configuration shared by all resource types */
 interface BaseConfig {
   /** Tilt grouping + k8s labels */
@@ -35,6 +54,8 @@ export interface DockerfileAppConfig extends BaseConfig {
   portForwards?: string[]
   /** Persistent storage */
   storage?: StorageConfig
+  /** Health probe config (defaults to HTTP /health:8080) */
+  probe?: ProbeConfig
 }
 
 /** App using pre-built image */
@@ -54,6 +75,8 @@ export interface ImageAppConfig extends BaseConfig {
   portForwards?: string[]
   /** Persistent storage */
   storage?: StorageConfig
+  /** Health probe config (defaults to HTTP /health:8080) */
+  probe?: ProbeConfig
 }
 
 /** Configuration for app() - must have either dockerfile or image */

@@ -8,6 +8,7 @@ export default [
     labels: ['temporal'],
     portForwards: ['5432'],
     storage: { path: '/var/lib/postgresql/data', size: '1Gi' },
+    probe: { type: 'tcp', port: 5432 },
     env: {
       POSTGRES_USER: 'temporal',
       POSTGRES_PASSWORD: 'temporal',
@@ -18,10 +19,11 @@ export default [
   app('temporal', {
     image: 'temporalio/auto-setup:1.29.1',
     labels: ['temporal'],
-    portForwards: ['7233', '7243'],
+    portForwards: ['7233:7233', '7243:7243'],
     resourceDeps: ['temporal-db'],
+    probe: { type: 'tcp', port: 7233 },
     env: {
-      DB: 'postgresql',
+      DB: 'postgres12',
       DB_PORT: '5432',
       POSTGRES_USER: 'temporal',
       POSTGRES_PWD: 'temporal',
@@ -34,6 +36,7 @@ export default [
     labels: ['temporal'],
     portForwards: ['8080'],
     resourceDeps: ['temporal'],
+    probe: { type: 'http', path: '/', port: 8080 },
     env: {
       TEMPORAL_ADDRESS: 'temporal:7233',
     },
