@@ -32,3 +32,7 @@ build:
 # Build desktop app for production
 app-build:
     cd apps/desktop && pnpm tauri build
+
+# Get Convex admin key (for dashboard login at localhost:6791)
+convex-key:
+    @kubectl exec deploy/convex-backend -- /convex/generate_admin_key.sh 2>/dev/null | head -1
