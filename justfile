@@ -50,3 +50,7 @@ synth:
 # Release desktop app (creates tag, triggers CI)
 release-desktop:
     ./scripts/release-desktop.sh
+
+# Open bd issue tracker UI
+bdui:
+    bdui start --port 3123 --open
