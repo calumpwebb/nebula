@@ -14,25 +14,40 @@ k3d + Tilt environment, commands, adding services, troubleshooting.
 Enums over strings, shared types, Convex schema conventions, Temporal patterns.
 -> `docs/patterns.md`
 
+## Agent Workflow
+bd (beads) issue tracking, AI agent protocols, planning document management.
+-> `AGENTS.md`
+
 ## Design Documents
 
 ### Brainstorm Log
 86 pins captured, mission phases, entity design, UI/UX exploration.
 -> `docs/brainstorms/nebula-brainstorm-log.md`
 
-### k3d + Tilt Setup
-Infrastructure design: cluster, services, dependencies, file structure.
--> `docs/plans/2025-12-28-k3d-tilt-dev-environment.md`
+### cdk8s Infrastructure (Current)
+cdk8s manifest generation replacing raw YAML.
+-> `docs/plans/2025-12-29-cdk8s-infra-design.md`
+-> `docs/plans/2025-12-29-cdk8s-infra-implementation.md`
 
-### Implementation Plan
-Step-by-step k3d + Tilt implementation details.
+### Better Auth Setup
+Authentication system design.
+-> `docs/plans/2025-01-01-better-auth-setup.md`
+
+### k3d + Tilt Setup
+Infrastructure design: cluster, services, dependencies.
+-> `docs/plans/2025-12-28-k3d-tilt-dev-environment.md`
 -> `docs/plans/2025-12-28-k3d-tilt-implementation.md`
+
+### Initial Repo Setup
+Monorepo structure, package organization.
+-> `docs/plans/2025-12-27-project-nebula-repo-setup-design.md`
 
 ## UI/Design
 
 ### Figma Guidelines
 Design system, component library documentation.
--> `docs/figma/Guidelines.md`
+-> `docs/figma/guidelines/Guidelines.md`
+-> `docs/figma/README.md`
 
 ## Quick Reference
 

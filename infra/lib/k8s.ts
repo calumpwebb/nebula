@@ -1,7 +1,7 @@
 // infra/lib/k8s.ts
 
 import { App, Chart } from 'cdk8s'
-import { KubeDeployment, KubeService, KubeConfigMap, KubePersistentVolumeClaim } from 'cdk8s-plus-27/lib/imports/k8s'
+import { KubeDeployment, KubeService, KubeConfigMap, KubePersistentVolumeClaim, IntOrString, Quantity } from 'cdk8s-plus-27/lib/imports/k8s'
 import type { AppDefinition } from './types'
 import * as fs from 'fs'
 import * as path from 'path'
@@ -46,7 +46,7 @@ export function generateK8sResources(
       metadata: { name: `${name}-pvc`, labels },
       spec: {
         accessModes: ['ReadWriteOnce'],
-        resources: { requests: { storage: config.storage.size } },
+        resources: { requests: { storage: Quantity.fromString(config.storage.size) } },
       },
     })
     volumeName = `${name}-data`
@@ -108,12 +108,12 @@ export function generateK8sResources(
             ports: [{ containerPort: STANDARDS.healthPort, name: 'health' }],
             env: Object.entries(env).map(([n, value]) => ({ name: n, value: String(value) })),
             readinessProbe: {
-              httpGet: { path: STANDARDS.healthPath, port: STANDARDS.healthPort },
+              httpGet: { path: STANDARDS.healthPath, port: IntOrString.fromNumber(STANDARDS.healthPort) },
               initialDelaySeconds: STANDARDS.readinessInitialDelay,
               periodSeconds: STANDARDS.readinessPeriod,
             },
             livenessProbe: {
-              httpGet: { path: STANDARDS.healthPath, port: STANDARDS.healthPort },
+              httpGet: { path: STANDARDS.healthPath, port: IntOrString.fromNumber(STANDARDS.healthPort) },
               initialDelaySeconds: STANDARDS.livenessInitialDelay,
               periodSeconds: STANDARDS.livenessPeriod,
             },
@@ -130,7 +130,7 @@ export function generateK8sResources(
     metadata: { name, labels },
     spec: {
       selector: { app: name },
-      ports: [{ port: STANDARDS.healthPort, targetPort: STANDARDS.healthPort }],
+      ports: [{ port: STANDARDS.healthPort, targetPort: IntOrString.fromNumber(STANDARDS.healthPort) }],
     },
   })
 

@@ -56,7 +56,12 @@ function generateAppTilt(def: AppDefinition, appDir: string): string[] {
     if (config.liveUpdate && config.liveUpdate.length > 0) {
       const syncs = config.liveUpdate.map(p => {
         const fullPath = path.resolve(appDir, p)
-        return `    sync('${fullPath}', '${p}')`
+        // Convert relative path to absolute container path
+        // Container workdir is /app/apps/<name>, so resolve relative to that
+        const containerPath = p.startsWith('../../')
+          ? '/app/' + p.replace('../../', '')
+          : '/app/apps/' + name.replace('nebula-', '') + '/' + p.replace('./', '')
+        return `    sync('${fullPath}', '${containerPath}')`
       }).join(',\n')
       dockerBuild += `,\n  live_update=[\n${syncs}\n  ]`
     }
@@ -65,8 +70,8 @@ function generateAppTilt(def: AppDefinition, appDir: string): string[] {
     lines.push(dockerBuild)
   }
 
-  // K8s YAML
-  lines.push(`k8s_yaml('dist/${name}.k8s.yaml')`)
+  // K8s YAML (path relative to dist/ where this Tiltfile lives)
+  lines.push(`k8s_yaml('${name}.k8s.yaml')`)
 
   // K8s resource config
   const resourceParts: string[] = [`  '${name}'`]
