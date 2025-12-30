@@ -4,13 +4,15 @@
 help:
     @just --list
 
-# Start everything (creates cluster if needed)
+# Start everything (creates cluster if needed, kills any existing tilt)
 up:
+    @pkill -f "tilt up" 2>/dev/null || true
     cd infra && tilt up
 
-# Stop services (keeps cluster)
+# Stop services and tilt process (keeps cluster and volumes)
 down:
-    cd infra && tilt down
+    -cd infra && tilt down
+    @pkill -f "tilt up" 2>/dev/null || true
 
 # Full reset (delete cluster + registry)
 reset:
