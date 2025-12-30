@@ -39,6 +39,7 @@ export default [
     probe: { type: 'http', path: '/', port: 8080 },
     env: {
       TEMPORAL_ADDRESS: 'temporal-server:7233',
+      TEMPORAL_UI_PORT: '8080', // Override K8s service discovery injection
     },
   }),
 ]
