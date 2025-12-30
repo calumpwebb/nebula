@@ -3,24 +3,5 @@ local('k3d cluster list | grep -q nebula || ctlptl apply -f ctlptl.yaml')
 
 allow_k8s_contexts('k3d-nebula')
 
-# Use local registry for all images
-default_registry('nebula-registry:5000')
-
-# Load helpers
-load('./lib/Tiltfile', 'nebula_service', 'infra_service')
-
-# Infrastructure services
-include('./services/temporal/Tiltfile')
-include('./services/convex/Tiltfile')
-
-# Application services
-include('./services/nebula-worker/Tiltfile')
-
-# Desktop app (runs locally, not in k8s)
-local_resource(
-    'nebula-desktop',
-    serve_cmd='pnpm tauri dev',
-    serve_dir='../apps/desktop',
-    labels=['nebula'],
-    resource_deps=['convex-backend', 'nebula-worker'],
-)
+# Load generated Tiltfile (from `just synth`)
+load_dynamic('./dist/Tiltfile.generated')
