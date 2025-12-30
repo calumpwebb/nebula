@@ -21,7 +21,7 @@ spec:
             - containerPort: 6791
           env:
             - name: NEXT_PUBLIC_DEPLOYMENT_URL
-              value: http://convex-backend:3210
+              value: http://localhost:3210
           readinessProbe:
             httpGet:
               path: /
