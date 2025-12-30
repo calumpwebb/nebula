@@ -1,5 +1,9 @@
 # Nebula development commands
 
+# Show available commands (default)
+help:
+    @just --list
+
 # Start everything (creates cluster if needed)
 up:
     cd infra && tilt up
@@ -36,3 +40,7 @@ app-build:
 # Get Convex admin key (for dashboard login at localhost:6791)
 convex-key:
     @kubectl exec deploy/convex-backend -- /convex/generate_admin_key.sh 2>/dev/null | head -1
+
+# Synthesize infrastructure (K8s YAML + Tiltfile)
+synth:
+    cd infra && pnpm synth
