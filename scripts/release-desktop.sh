@@ -15,11 +15,10 @@ if [ -n "$(git status --porcelain)" ]; then
     exit 1
 fi
 
-# Show current state
-CURRENT=$(grep '"version"' apps/desktop/src-tauri/tauri.conf.json | head -1 | sed 's/.*"\([0-9]*\.[0-9]*\.[0-9]*\)".*/\1/')
-LATEST=$(git tag -l "desktop-v*" --sort=-v:refname | head -1)
-echo "Current version: $CURRENT"
-echo "Latest tag: ${LATEST:-(none)}"
+# Show current state (version derived from git tag, not source files)
+LATEST_TAG=$(git tag -l "desktop-v*" --sort=-v:refname | head -1)
+LATEST_VERSION=${LATEST_TAG#desktop-v}
+echo "Latest release: ${LATEST_VERSION:-(none)}"
 echo ""
 
 # Get new version
