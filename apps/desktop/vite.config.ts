@@ -2,6 +2,19 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { TanStackRouterVite } from "@tanstack/router-plugin/vite";
 import path from "path";
+import fs from "fs";
+
+// Read version from tauri.conf.json
+function getAppVersion(): string {
+  try {
+    const tauriConfig = JSON.parse(
+      fs.readFileSync(path.resolve(__dirname, "src-tauri/tauri.conf.json"), "utf-8")
+    );
+    return tauriConfig.version || "0.0.0";
+  } catch {
+    return "dev";
+  }
+}
 
 // @ts-expect-error process is a nodejs global
 const host = process.env.TAURI_DEV_HOST;
@@ -10,20 +23,20 @@ const host = process.env.TAURI_DEV_HOST;
 export default defineConfig(async () => ({
   plugins: [TanStackRouterVite(), react()],
 
+  define: {
+    __APP_VERSION__: JSON.stringify(getAppVersion()),
+  },
+
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
   },
 
-  // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
-  //
-  // 1. prevent Vite from obscuring rust errors
   clearScreen: false,
-  // 2. tauri dev server
   server: {
     port: 1420,
-    strictPort: false,  // Allow fallback to next available port
+    strictPort: false,
     host: host || false,
     hmr: host
       ? {
@@ -33,7 +46,6 @@ export default defineConfig(async () => ({
         }
       : undefined,
     watch: {
-      // 3. tell Vite to ignore watching `src-tauri`
       ignored: ["**/src-tauri/**"],
     },
   },
