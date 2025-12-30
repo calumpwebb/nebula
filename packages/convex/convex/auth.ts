@@ -5,6 +5,7 @@ import { DataModel } from "./_generated/dataModel";
 import { query } from "./_generated/server";
 import { betterAuth } from "better-auth/minimal";
 import authConfig from "./auth.config";
+import { sendEmail } from "./lib/email";
 
 // TODO(NEBULA-uy7): Set SITE_URL env var in production
 const siteUrl = process.env.SITE_URL ?? "http://localhost:1420";
@@ -21,11 +22,29 @@ export const createAuth = (ctx: GenericCtx<DataModel>) => {
       minPasswordLength: 8,
       maxPasswordLength: 128,
       // TODO(NEBULA-c36): Integrate Resend for real email delivery
-      sendVerificationEmail: async ({ user, token }) => {
-        console.log(`[DEV] Verification email for ${user.email}: ${token}`);
+      sendVerificationEmail: async ({ user, url }) => {
+        await sendEmail(
+          user.email,
+          'Verify your Nebula account',
+          `
+          <h1>Welcome to Nebula!</h1>
+          <p>Click the link below to verify your email address:</p>
+          <p><a href="${url}">Verify Email</a></p>
+          <p>This link expires in 15 minutes.</p>
+          `
+        )
       },
-      sendResetPasswordEmail: async ({ user, token }) => {
-        console.log(`[DEV] Password reset for ${user.email}: ${token}`);
+      sendResetPasswordEmail: async ({ user, url }) => {
+        await sendEmail(
+          user.email,
+          'Reset your Nebula password',
+          `
+          <h1>Password Reset</h1>
+          <p>Click the link below to reset your password:</p>
+          <p><a href="${url}">Reset Password</a></p>
+          <p>If you didn't request this, ignore this email.</p>
+          `
+        )
       },
     },
     plugins: [crossDomain({ siteUrl }), convex({ authConfig })],
