@@ -52,7 +52,7 @@ Plans: `docs/plans/YYYY-MM-DD-<feature>.md`
 Index: `docs/KNOWLEDGE_BASE.md`
 
 ## Desktop Icons
-Icons must be **8-bit RGBA PNG**. Use `magick -define png:color-type=6` to force RGBA. CI fails otherwise.
+Icons must be **8-bit RGBA PNG**. Use `magick ... PNG32:output.png` to force RGBA. CI fails otherwise.
 
 ## Memory
 "Update your memory" = edit this CLAUDE.md file. Commit after every task completion.
