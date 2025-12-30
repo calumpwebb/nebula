@@ -23,7 +23,8 @@ export default [
   }),
 
   setupScript('convex-auth-setup', {
-    cmd: 'cd packages/convex && npx convex env set BETTER_AUTH_SECRET "dev-secret-do-not-use-in-production-1234567890"',
+    cmd: 'npx convex env set BETTER_AUTH_SECRET "dev-secret-do-not-use-in-production-1234567890"',
+    cwd: 'packages/convex',
     resourceDeps: ['convex-backend'],
     labels: ['convex'],
   }),

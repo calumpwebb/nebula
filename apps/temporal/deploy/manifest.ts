@@ -39,6 +39,8 @@ export default [
     probe: { type: 'http', path: '/', port: 8080 },
     env: {
       TEMPORAL_ADDRESS: 'temporal:7233',
+      // Override K8s-injected TEMPORAL_PORT which conflicts with app config
+      TEMPORAL_PORT: '7233',
     },
   }),
 ]

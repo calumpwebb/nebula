@@ -69,7 +69,7 @@ async function main() {
 
   // Generate Tiltfile
   console.log('📝 Generating Tiltfile...')
-  const tiltfile = generateTiltfile(allDefinitions, appDirs)
+  const tiltfile = generateTiltfile(allDefinitions, appDirs, PROJECT_ROOT)
   fs.writeFileSync(path.join(DIST_DIR, 'Tiltfile.generated'), tiltfile)
 
   console.log('✅ Done!')
