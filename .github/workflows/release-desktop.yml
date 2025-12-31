@@ -69,10 +69,10 @@ jobs:
           security list-keychain -d user -s $KEYCHAIN_PATH
           security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
 
-      - name: Build Tauri app (Universal)
+      - name: Build Tauri app (Universal, .app only)
         run: |
           cd apps/desktop
-          pnpm tauri build --target universal-apple-darwin
+          pnpm tauri build --target universal-apple-darwin --bundles app
         env:
           VITE_CONVEX_URL: ${{ secrets.VITE_CONVEX_URL }}
           VITE_CONVEX_SITE_URL: ${{ secrets.VITE_CONVEX_SITE_URL }}
@@ -81,43 +81,24 @@ jobs:
           APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
 
-      - name: Hide .VolumeIcon.icns in DMG
+      - name: Create DMG with create-dmg
         run: |
-          DMG_PATH=$(find apps/desktop/src-tauri/target/universal-apple-darwin/release/bundle/dmg -name "*.dmg" | head -1)
-          DMG_DIR=$(dirname "$DMG_PATH")
-          DMG_NAME=$(basename "$DMG_PATH")
-          TEMP_DMG="$DMG_DIR/temp_$DMG_NAME"
-          VOLUME_NAME="Project Nebula"
-
-          hdiutil convert "$DMG_PATH" -format UDRW -o "$TEMP_DMG"
-          hdiutil attach "$TEMP_DMG" -mountpoint "/Volumes/$VOLUME_NAME"
-
-          # Hide dotfiles using invisible attribute
-          SetFile -a V "/Volumes/$VOLUME_NAME/.VolumeIcon.icns" 2>/dev/null || true
-          SetFile -a V "/Volumes/$VOLUME_NAME/.fseventsd" 2>/dev/null || true
-          SetFile -a V "/Volumes/$VOLUME_NAME/.background" 2>/dev/null || true
-
-          osascript <<EOF
-          tell application "Finder"
-            tell disk "$VOLUME_NAME"
-              open
-              set current view of container window to icon view
-              set theViewOptions to the icon view options of container window
-              set icon size of theViewOptions to 100
-              set the bounds of container window to {400, 100, 1060, 500}
-              close
-              open
-              delay 2
-              close
-            end tell
-          end tell
-          EOF
-
-          sync
-          hdiutil detach "/Volumes/$VOLUME_NAME"
-          rm "$DMG_PATH"
-          hdiutil convert "$TEMP_DMG" -format UDZO -o "$DMG_PATH"
-          rm "$TEMP_DMG"
+          brew install create-dmg imagemagick
+          VERSION="${{ steps.version.outputs.version }}"
+          APP_PATH="apps/desktop/src-tauri/target/universal-apple-darwin/release/bundle/macos/Project Nebula.app"
+          DMG_DIR="apps/desktop/src-tauri/target/universal-apple-darwin/release/bundle/dmg"
+          mkdir -p "$DMG_DIR"
+          magick -size 600x400 xc:black /tmp/dmg-background.png
+          create-dmg \
+            --volname "Project Nebula" \
+            --volicon "apps/desktop/src-tauri/icons/icon.icns" \
+            --background /tmp/dmg-background.png \
+            --window-size 600 400 \
+            --icon-size 100 \
+            --icon "Project Nebula.app" 150 200 \
+            --app-drop-link 450 200 \
+            "$DMG_DIR/Project Nebula_${VERSION}_universal.dmg" \
+            "$APP_PATH"
 
       - name: Upload macOS artifacts
         uses: actions/upload-artifact@v4
