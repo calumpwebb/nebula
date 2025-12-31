@@ -43,6 +43,10 @@ Infrastructure design: cluster, services, dependencies.
 -> `docs/plans/2025-12-28-k3d-tilt-dev-environment.md`
 -> `docs/plans/2025-12-28-k3d-tilt-implementation.md`
 
+### Pre-commit Hooks
+Linting, formatting, type-checking, commit message validation with NEBULA ticket requirement.
+-> `docs/plans/2025-12-31-pre-commit-hooks-design.md`
+
 ### Initial Repo Setup
 Monorepo structure, package organization.
 -> `docs/plans/2025-12-27-nebula-repo-setup-design.md`
