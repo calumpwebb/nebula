@@ -1,4 +1,4 @@
-# Project Nebula: Repository Setup Design
+# Nebula: Repository Setup Design
 
 ## Overview
 
@@ -15,7 +15,7 @@ Fresh TypeScript monorepo for Nebula - a developer HUD for AI-assisted coding. S
 ## Folder Structure
 
 ```
-project-nebula/
+nebula/
 ├── apps/
 │   ├── desktop/              # Tauri + React (placeholder)
 │   │   └── package.json

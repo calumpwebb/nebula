@@ -87,24 +87,24 @@ jobs:
         run: |
           brew install create-dmg imagemagick
           VERSION="${{ steps.version.outputs.version }}"
-          APP_PATH="apps/desktop/src-tauri/target/aarch64-apple-darwin/release/bundle/macos/Project Nebula.app"
+          APP_PATH="apps/desktop/src-tauri/target/aarch64-apple-darwin/release/bundle/macos/Nebula.app"
           DMG_DIR="apps/desktop/src-tauri/target/aarch64-apple-darwin/release/bundle/dmg"
           mkdir -p "$DMG_DIR"
           magick -size 600x400 xc:black \
             -font Helvetica -fill white -pointsize 13 \
-            -draw "text 95,270 'Project Nebula'" \
+            -draw "text 95,270 'Nebula'" \
             -draw "text 405,270 'Applications'" \
             /tmp/dmg-background.png
           create-dmg \
-            --volname "Project Nebula" \
+            --volname "Nebula" \
             --volicon "apps/desktop/src-tauri/icons/icon.icns" \
             --background /tmp/dmg-background.png \
             --window-size 600 400 \
             --icon-size 100 \
-            --hide-extension "Project Nebula.app" \
-            --icon "Project Nebula.app" 150 200 \
+            --hide-extension "Nebula.app" \
+            --icon "Nebula.app" 150 200 \
             --app-drop-link 450 200 \
-            "$DMG_DIR/Project.Nebula_${VERSION}_aarch64.dmg" \
+            "$DMG_DIR/Nebula_${VERSION}_aarch64.dmg" \
             "$APP_PATH"
 
       - name: Upload macOS arm64 artifacts
@@ -188,24 +188,24 @@ jobs:
         run: |
           brew install create-dmg imagemagick
           VERSION="${{ steps.version.outputs.version }}"
-          APP_PATH="apps/desktop/src-tauri/target/x86_64-apple-darwin/release/bundle/macos/Project Nebula.app"
+          APP_PATH="apps/desktop/src-tauri/target/x86_64-apple-darwin/release/bundle/macos/Nebula.app"
           DMG_DIR="apps/desktop/src-tauri/target/x86_64-apple-darwin/release/bundle/dmg"
           mkdir -p "$DMG_DIR"
           magick -size 600x400 xc:black \
             -font Helvetica -fill white -pointsize 13 \
-            -draw "text 95,270 'Project Nebula'" \
+            -draw "text 95,270 'Nebula'" \
             -draw "text 405,270 'Applications'" \
             /tmp/dmg-background.png
           create-dmg \
-            --volname "Project Nebula" \
+            --volname "Nebula" \
             --volicon "apps/desktop/src-tauri/icons/icon.icns" \
             --background /tmp/dmg-background.png \
             --window-size 600 400 \
             --icon-size 100 \
-            --hide-extension "Project Nebula.app" \
-            --icon "Project Nebula.app" 150 200 \
+            --hide-extension "Nebula.app" \
+            --icon "Nebula.app" 150 200 \
             --app-drop-link 450 200 \
-            "$DMG_DIR/Project.Nebula_${VERSION}_x64.dmg" \
+            "$DMG_DIR/Nebula_${VERSION}_x64.dmg" \
             "$APP_PATH"
 
       - name: Upload macOS x64 artifacts
@@ -326,7 +326,7 @@ jobs:
       - name: Generate latest.json manifest
         run: |
           VERSION="${{ steps.version.outputs.version }}"
-          REPO="calumpwebb/project-nebula"
+          REPO="calumpwebb/nebula"
 
           # Find the signature files (each arch has its own signature)
           MAC_ARM64_SIG=$(cat artifacts/macos-arm64/*.app.tar.gz.sig 2>/dev/null || echo "")
@@ -344,15 +344,15 @@ jobs:
             "platforms": {
               "darwin-aarch64": {
                 "signature": "$MAC_ARM64_SIG",
-                "url": "https://github.com/$REPO/releases/download/desktop-v$VERSION/Project.Nebula_${VERSION}_aarch64.app.tar.gz"
+                "url": "https://github.com/$REPO/releases/download/desktop-v$VERSION/Nebula_${VERSION}_aarch64.app.tar.gz"
               },
               "darwin-x86_64": {
                 "signature": "$MAC_X64_SIG",
-                "url": "https://github.com/$REPO/releases/download/desktop-v$VERSION/Project.Nebula_${VERSION}_x64.app.tar.gz"
+                "url": "https://github.com/$REPO/releases/download/desktop-v$VERSION/Nebula_${VERSION}_x64.app.tar.gz"
               },
               "linux-x86_64": {
                 "signature": "$LINUX_SIG",
-                "url": "https://github.com/$REPO/releases/download/desktop-v$VERSION/project-nebula_${VERSION}_amd64.AppImage.tar.gz"
+                "url": "https://github.com/$REPO/releases/download/desktop-v$VERSION/nebula_${VERSION}_amd64.AppImage.tar.gz"
               }
             }
           }

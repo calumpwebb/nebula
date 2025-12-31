@@ -71,7 +71,7 @@ Full file after edit:
 [package]
 name = "nebula-desktop"
 version = "0.1.0"
-description = "Project Nebula - Developer HUD for AI-assisted coding"
+description = "Nebula - Developer HUD for AI-assisted coding"
 authors = ["you"]
 edition = "2021"
 
@@ -118,7 +118,7 @@ Replace entire `apps/desktop/src-tauri/tauri.conf.json` with:
 ```json
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "Project Nebula",
+  "productName": "Nebula",
   "version": "0.1.0",
   "identifier": "com.nebula.desktop",
   "build": {
@@ -130,7 +130,7 @@ Replace entire `apps/desktop/src-tauri/tauri.conf.json` with:
   "app": {
     "windows": [
       {
-        "title": "Project Nebula",
+        "title": "Nebula",
         "width": 1200,
         "height": 800,
         "minWidth": 600,
@@ -147,7 +147,7 @@ Replace entire `apps/desktop/src-tauri/tauri.conf.json` with:
   "plugins": {
     "updater": {
       "endpoints": [
-        "https://github.com/calumpwebb/project-nebula/releases/latest/download/latest.json"
+        "https://github.com/calumpwebb/nebula/releases/latest/download/latest.json"
       ],
       "pubkey": "PUBLIC_KEY_FROM_TASK_1"
     }
@@ -465,7 +465,7 @@ echo -e "${GREEN}✓ Created tag $TAG_NAME${NC}"
 echo -e "${GREEN}✓ Pushed to origin${NC}"
 echo ""
 echo "Release started! Watch progress:"
-echo "https://github.com/calumpwebb/project-nebula/actions"
+echo "https://github.com/calumpwebb/nebula/actions"
 ```
 
 **Step 2: Make executable**
@@ -690,7 +690,7 @@ jobs:
       - name: Generate latest.json manifest
         run: |
           VERSION="${{ steps.version.outputs.version }}"
-          REPO="calumpwebb/project-nebula"
+          REPO="calumpwebb/nebula"
 
           # Find the signature files
           MAC_SIG=$(cat artifacts/macos/*.app.tar.gz.sig 2>/dev/null || echo "")
@@ -712,7 +712,7 @@ jobs:
               },
               "linux-x86_64": {
                 "signature": "$LINUX_SIG",
-                "url": "https://github.com/$REPO/releases/download/desktop-v$VERSION/project-nebula_${VERSION}_amd64.AppImage.tar.gz"
+                "url": "https://github.com/$REPO/releases/download/desktop-v$VERSION/nebula_${VERSION}_amd64.AppImage.tar.gz"
               }
             }
           }

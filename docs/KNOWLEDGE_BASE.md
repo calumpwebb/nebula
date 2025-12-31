@@ -24,7 +24,12 @@ bd (beads) issue tracking, AI agent protocols, planning document management.
 86 pins captured, mission phases, entity design, UI/UX exploration.
 -> `docs/brainstorms/nebula-brainstorm-log.md`
 
-### cdk8s Infrastructure (Current)
+### Desktop Release
+CI/CD for macOS universal builds, code signing, notarization, GitHub releases.
+-> `docs/plans/2025-12-30-desktop-release-design.md`
+-> `docs/plans/2025-12-30-desktop-release-implementation.md`
+
+### cdk8s Infrastructure
 cdk8s manifest generation replacing raw YAML.
 -> `docs/plans/2025-12-29-cdk8s-infra-design.md`
 -> `docs/plans/2025-12-29-cdk8s-infra-implementation.md`
@@ -40,24 +45,20 @@ Infrastructure design: cluster, services, dependencies.
 
 ### Initial Repo Setup
 Monorepo structure, package organization.
--> `docs/plans/2025-12-27-project-nebula-repo-setup-design.md`
+-> `docs/plans/2025-12-27-nebula-repo-setup-design.md`
 
 ## UI/Design
-
-### Figma Guidelines
 Design system, component library documentation.
 -> `docs/figma/guidelines/Guidelines.md`
 -> `docs/figma/README.md`
 
 ## Quick Reference
 
-### Mission Phases
-Brainstorm -> Design -> Plan -> Execute
+| Concept | Values |
+|---------|--------|
+| Mission Phases | Brainstorm -> Design -> Plan -> Execute |
+| Ticket States | Backlog -> InProgress -> Done (or Blocked) |
 
-### Ticket States
-Backlog -> InProgress -> Done (or Blocked)
-
-### Key Ports
 | Service | Port |
 |---------|------|
 | Tilt UI | 10350 |

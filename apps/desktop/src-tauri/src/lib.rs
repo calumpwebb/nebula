@@ -24,7 +24,7 @@ pub fn run() {
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_updater::Builder::new().build())
         .setup(|app| {
-            log::info!("Project Nebula v{} starting...", VERSION);
+            log::info!("Nebula v{} starting...", VERSION);
 
             let handle = app.handle().clone();
 

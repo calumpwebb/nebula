@@ -75,4 +75,4 @@ fi
 git push origin "$TAG"
 
 echo ""
-echo "Done. Watch: https://github.com/calumpwebb/project-nebula/actions"
+echo "Done. Watch: https://github.com/calumpwebb/nebula/actions"

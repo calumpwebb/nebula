@@ -5,7 +5,7 @@ description: Use when releasing the desktop app - analyzes commits, suggests sem
 
 # Release Desktop Workflow
 
-You are orchestrating a desktop release for Project Nebula. Guide the user through each step interactively.
+You are orchestrating a desktop release for Nebula. Guide the user through each step interactively.
 
 ## Step 1: Verify Prerequisites
 
@@ -129,7 +129,7 @@ After successful push:
 ```
 Tag desktop-v0.2.0 pushed successfully.
 
-Monitor the build: https://github.com/calumpwebb/project-nebula/actions
+Monitor the build: https://github.com/calumpwebb/nebula/actions
 
 The release will be created automatically when builds complete.
 Expected artifacts: macOS DMG, Linux AppImage
@@ -137,7 +137,7 @@ Expected artifacts: macOS DMG, Linux AppImage
 
 ## Important Notes
 
-- Always work in the project-nebula directory
+- Always work in the nebula directory
 - The script creates an annotated tag with release notes as the message
 - CI extracts these notes and uses them for the GitHub Release
 - If builds fail, the tag exists but no release is created - user may need to delete tag and retry

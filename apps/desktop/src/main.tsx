@@ -13,7 +13,7 @@ declare const __APP_VERSION__: string;
 
 // Forward console.log/error/etc to Rust logger
 attachConsole().then(() => {
-  console.info(`[frontend] Project Nebula v${__APP_VERSION__} starting...`);
+  console.info(`[frontend] Nebula v${__APP_VERSION__} starting...`);
   console.info(`[frontend] Convex URL: ${import.meta.env.VITE_CONVEX_URL}`);
 }).catch((err) => {
   // Fallback if attachConsole fails (e.g., not in Tauri context)

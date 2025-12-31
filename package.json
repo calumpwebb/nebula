@@ -1,5 +1,5 @@
 {
-  "name": "project-nebula",
+  "name": "nebula",
   "private": true,
   "packageManager": "pnpm@9.15.1",
   "scripts": {

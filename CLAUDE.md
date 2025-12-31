@@ -1,4 +1,4 @@
-# Project Nebula
+# Nebula
 
 Developer HUD for AI-assisted coding. TypeScript monorepo: Tauri desktop, Convex backend (self-hosted), Temporal workflows.
 

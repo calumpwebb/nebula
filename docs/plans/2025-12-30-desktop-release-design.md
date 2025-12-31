@@ -2,7 +2,7 @@
 
 ## Overview
 
-Distribution system for the Project Nebula desktop app with automatic updates, code signing, and a streamlined release workflow.
+Distribution system for the Nebula desktop app with automatic updates, code signing, and a streamlined release workflow.
 
 ## Decisions
 
@@ -73,7 +73,7 @@ Continue? [y/N] y
 ✓ Pushed to origin
 
 Release started! Watch progress:
-https://github.com/calumpwebb/project-nebula/actions
+https://github.com/calumpwebb/nebula/actions
 ```
 
 **Validations:**
@@ -145,7 +145,7 @@ APPLE_TEAM_ID                  # 10-char team ID
   "plugins": {
     "updater": {
       "endpoints": [
-        "https://github.com/calumpwebb/project-nebula/releases/latest/download/latest.json"
+        "https://github.com/calumpwebb/nebula/releases/latest/download/latest.json"
       ],
       "pubkey": "<PUBLIC_KEY_FROM_TAURI_SIGNER>"
     }

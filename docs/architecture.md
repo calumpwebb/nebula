@@ -2,7 +2,7 @@
 
 ## System Overview
 
-Project Nebula is a developer HUD for AI-assisted coding. Desktop app orchestrates AI workflows through a real-time backend.
+Nebula is a developer HUD for AI-assisted coding. Desktop app orchestrates AI workflows through a real-time backend.
 
 ```
 Desktop (Tauri) <-> Convex (Backend) <-> Temporal (Workflows) <-> Worker

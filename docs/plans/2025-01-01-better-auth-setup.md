@@ -418,7 +418,7 @@ function Dashboard() {
   return (
     <div className="flex-1 flex items-center justify-center">
       <div className="text-white text-center">
-        <h1 className="text-2xl mb-4">Welcome to Project Nebula</h1>
+        <h1 className="text-2xl mb-4">Welcome to Nebula</h1>
         <p className="text-gray-400 mb-4">{session?.user?.email}</p>
         <button
           onClick={() => authClient.signOut()}
