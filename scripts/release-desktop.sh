@@ -1,6 +1,17 @@
 #!/bin/bash
 set -e
 
+# Parse arguments
+VERSION=""
+NOTES=""
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        --version) VERSION="$2"; shift 2 ;;
+        --notes) NOTES="$2"; shift 2 ;;
+        *) shift ;;
+    esac
+done
+
 # Must be on main
 BRANCH=$(git branch --show-current)
 if [ "$BRANCH" != "main" ]; then
@@ -20,18 +31,19 @@ LATEST_TAG=$(git tag -l "desktop-v*" --sort=-v:refname | head -1)
 LATEST_VERSION=${LATEST_TAG#desktop-v}
 echo "Latest release: ${LATEST_VERSION:-(none)}"
 
-# Calculate next patch version
-if [ -n "$LATEST_VERSION" ]; then
-    IFS='.' read -r MAJOR MINOR PATCH <<< "$LATEST_VERSION"
-    NEXT_VERSION="$MAJOR.$MINOR.$((PATCH + 1))"
-else
-    NEXT_VERSION="0.1.0"
+# Get version (from arg or prompt)
+if [ -z "$VERSION" ]; then
+    # Calculate next patch version as suggestion
+    if [ -n "$LATEST_VERSION" ]; then
+        IFS='.' read -r MAJOR MINOR PATCH <<< "$LATEST_VERSION"
+        NEXT_VERSION="$MAJOR.$MINOR.$((PATCH + 1))"
+    else
+        NEXT_VERSION="0.1.0"
+    fi
+    echo ""
+    read -p "New version [$NEXT_VERSION]: " VERSION
+    VERSION=${VERSION:-$NEXT_VERSION}
 fi
-echo ""
-
-# Get new version (with suggested default)
-read -p "New version [$NEXT_VERSION]: " VERSION
-VERSION=${VERSION:-$NEXT_VERSION}
 
 # Validate
 if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
@@ -45,15 +57,21 @@ if git tag -l | grep -q "^$TAG$"; then
     exit 1
 fi
 
-# Confirm
+# Confirm (skip if notes provided = non-interactive mode)
 echo ""
 echo "Tag: $TAG"
 echo "Commit: $(git rev-parse --short HEAD)"
-read -p "Create and push? [Y/n] " CONFIRM
-[[ "$CONFIRM" =~ ^[nN]$ ]] && exit 0
+if [ -z "$NOTES" ]; then
+    read -p "Create and push? [Y/n] " CONFIRM
+    [[ "$CONFIRM" =~ ^[nN]$ ]] && exit 0
+fi
 
-# Do it
-git tag "$TAG"
+# Create tag (annotated if notes provided, lightweight otherwise)
+if [ -n "$NOTES" ]; then
+    git tag -a "$TAG" -m "$NOTES"
+else
+    git tag "$TAG"
+fi
 git push origin "$TAG"
 
 echo ""

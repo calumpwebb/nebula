@@ -10,7 +10,23 @@
   </head>
 
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <!-- Visible until React hydrates - helps debug black screen -->
+      <div id="loading" style="color:#666;padding:2rem;font-family:monospace;">Loading...</div>
+    </div>
+    <!-- Debug: runs immediately before any modules load -->
+    <script>
+      console.log('[html] Page loaded');
+      window.onerror = function(msg, url, line, col, err) {
+        console.error('[html] Global error:', msg, url, line, col, err);
+        document.getElementById('root').innerHTML =
+          '<pre style="color:red;padding:1rem;">Error: ' + msg + '\n' + (err?.stack || '') + '</pre>';
+        return false;
+      };
+      window.addEventListener('unhandledrejection', function(e) {
+        console.error('[html] Unhandled rejection:', e.reason);
+      });
+    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
