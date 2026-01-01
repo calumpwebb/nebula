@@ -2,9 +2,25 @@ use log::{error, info};
 use tauri::AppHandle;
 use tauri_plugin_updater::UpdaterExt;
 
-/// Check for updates and handle the update flow.
+const VERSION: &str = env!("CARGO_PKG_VERSION");
+
+// Swift function declarations (macOS only)
+#[cfg(target_os = "macos")]
+mod swift {
+    use swift_rs::{swift, SRString};
+
+    swift!(pub fn show_up_to_date_dialog(version: &SRString));
+    swift!(pub fn show_update_available_dialog(
+        current_version: &SRString,
+        new_version: &SRString
+    ) -> bool);
+    swift!(pub fn show_update_required_dialog(new_version: &SRString));
+    swift!(pub fn show_update_error_dialog(error_message: &SRString));
+}
+
+/// Check for updates on startup. Skips in debug builds unless forced.
 /// Returns Ok(true) if app should continue, Ok(false) if update is in progress.
-pub async fn check_and_update(app: &AppHandle) -> Result<bool, Box<dyn std::error::Error>> {
+pub async fn check_on_startup(app: &AppHandle) -> Result<bool, Box<dyn std::error::Error>> {
     // Skip update check in debug builds (dev mode)
     if cfg!(debug_assertions) {
         info!("Skipping update check (debug build)");
@@ -17,6 +33,21 @@ pub async fn check_and_update(app: &AppHandle) -> Result<bool, Box<dyn std::erro
         return Ok(true);
     }
 
+    do_update_check(app, false).await
+}
+
+/// Manual update check triggered from menu. Always runs, shows "up to date" dialog.
+pub async fn check_for_updates(app: &AppHandle) -> Result<(), Box<dyn std::error::Error>> {
+    do_update_check(app, true).await?;
+    Ok(())
+}
+
+/// Core update check logic.
+/// If `show_up_to_date` is true, shows a dialog when no update is available.
+async fn do_update_check(
+    app: &AppHandle,
+    show_up_to_date: bool,
+) -> Result<bool, Box<dyn std::error::Error>> {
     let updater = app.updater()?;
 
     info!("Checking for updates...");
@@ -25,11 +56,26 @@ pub async fn check_and_update(app: &AppHandle) -> Result<bool, Box<dyn std::erro
         Ok(Some(update)) => update,
         Ok(None) => {
             info!("No update available");
+            if show_up_to_date {
+                #[cfg(target_os = "macos")]
+                {
+                    use swift_rs::SRString;
+                    let version: SRString = VERSION.into();
+                    unsafe { swift::show_up_to_date_dialog(&version) };
+                }
+            }
             return Ok(true);
         }
         Err(e) => {
-            // If update check fails (offline, etc.), allow app to continue
-            error!("Update check failed: {}. Continuing anyway.", e);
+            error!("Update check failed: {}", e);
+            if show_up_to_date {
+                #[cfg(target_os = "macos")]
+                {
+                    use swift_rs::SRString;
+                    let error_msg: SRString = e.to_string().as_str().into();
+                    unsafe { swift::show_update_error_dialog(&error_msg) };
+                }
+            }
             return Ok(true);
         }
     };
@@ -38,47 +84,34 @@ pub async fn check_and_update(app: &AppHandle) -> Result<bool, Box<dyn std::erro
     let latest = update.version.clone();
     info!("Update available: {} -> {}", current, latest);
 
-    // Show native dialog - blocking, no dismiss option
-    let message = format!(
-        "Version {} is available.\n\nYou must update to continue using the app.",
-        latest
-    );
-
-    // Use native dialog (rfd)
-    let should_update = tauri::async_runtime::spawn_blocking(move || {
-        rfd::MessageDialog::new()
-            .set_title("Update Required")
-            .set_description(&message)
-            .set_buttons(rfd::MessageButtons::Ok)
-            .show();
-        true // Always update - no cancel option
-    })
-    .await?;
-
-    if should_update {
-        info!("Downloading update...");
-
-        // Download and install
-        let mut downloaded = 0;
-        let _ = update
-            .download_and_install(
-                |chunk_length, content_length| {
-                    downloaded += chunk_length;
-                    if let Some(total) = content_length {
-                        info!("Downloaded {} / {} bytes", downloaded, total);
-                    }
-                },
-                || {
-                    info!("Download complete, installing...");
-                },
-            )
-            .await?;
-
-        info!("Update installed, restarting...");
-        app.restart();
+    // Show native dialog via Swift
+    #[cfg(target_os = "macos")]
+    {
+        use swift_rs::SRString;
+        let latest_str: SRString = latest.as_str().into();
+        unsafe { swift::show_update_required_dialog(&latest_str) };
     }
 
-    Ok(true)
+    info!("Downloading update...");
+
+    // Download and install
+    let mut downloaded = 0;
+    let _ = update
+        .download_and_install(
+            |chunk_length, content_length| {
+                downloaded += chunk_length;
+                if let Some(total) = content_length {
+                    info!("Downloaded {} / {} bytes", downloaded, total);
+                }
+            },
+            || {
+                info!("Download complete, installing...");
+            },
+        )
+        .await?;
+
+    info!("Update installed, restarting...");
+    app.restart();
 }
 
 #[cfg(test)]

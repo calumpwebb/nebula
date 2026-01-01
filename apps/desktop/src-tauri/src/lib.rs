@@ -1,5 +1,6 @@
 mod updater;
 
+use tauri::menu::{MenuBuilder, MenuItemBuilder, SubmenuBuilder};
 use tauri_plugin_log::{Target, TargetKind};
 
 const VERSION: &str = env!("CARGO_PKG_VERSION");
@@ -26,11 +27,67 @@ pub fn run() {
         .setup(|app| {
             log::info!("Nebula v{} starting...", VERSION);
 
-            let handle = app.handle().clone();
+            // Build the app menu with "Check for Updates"
+            let check_updates =
+                MenuItemBuilder::with_id("check_updates", "Check for Updates...").build(app)?;
 
-            // Run update check before showing window
+            let app_submenu = SubmenuBuilder::new(app, "Nebula")
+                .about(None)
+                .separator()
+                .item(&check_updates)
+                .separator()
+                .services()
+                .separator()
+                .hide()
+                .hide_others()
+                .show_all()
+                .separator()
+                .quit()
+                .build()?;
+
+            let edit_submenu = SubmenuBuilder::new(app, "Edit")
+                .undo()
+                .redo()
+                .separator()
+                .cut()
+                .copy()
+                .paste()
+                .select_all()
+                .build()?;
+
+            let window_submenu = SubmenuBuilder::new(app, "Window")
+                .minimize()
+                .maximize()
+                .close_window()
+                .separator()
+                .fullscreen()
+                .build()?;
+
+            let menu = MenuBuilder::new(app)
+                .item(&app_submenu)
+                .item(&edit_submenu)
+                .item(&window_submenu)
+                .build()?;
+
+            app.set_menu(menu)?;
+
+            // Handle menu events
+            let handle = app.handle().clone();
+            app.on_menu_event(move |_app, event| {
+                if event.id().as_ref() == "check_updates" {
+                    let handle = handle.clone();
+                    tauri::async_runtime::spawn(async move {
+                        if let Err(e) = updater::check_for_updates(&handle).await {
+                            log::error!("[updater] Manual check failed: {}", e);
+                        }
+                    });
+                }
+            });
+
+            // Run update check on startup
+            let handle = app.handle().clone();
             tauri::async_runtime::spawn(async move {
-                if let Err(e) = updater::check_and_update(&handle).await {
+                if let Err(e) = updater::check_on_startup(&handle).await {
                     log::error!("[updater] Error: {}", e);
                 }
             });
