@@ -85,21 +85,15 @@ jobs:
 
       - name: Create DMG with create-dmg
         run: |
-          brew install create-dmg imagemagick
+          brew install create-dmg
           VERSION="${{ steps.version.outputs.version }}"
           APP_PATH="apps/desktop/src-tauri/target/aarch64-apple-darwin/release/bundle/macos/Nebula.app"
           DMG_DIR="apps/desktop/src-tauri/target/aarch64-apple-darwin/release/bundle/dmg"
           mkdir -p "$DMG_DIR"
           rm -f "$DMG_DIR"/*.dmg
-          magick -size 600x400 xc:black \
-            -font Helvetica -fill white -pointsize 13 \
-            -draw "text 95,270 'Nebula'" \
-            -draw "text 405,270 'Applications'" \
-            /tmp/dmg-background.png
           create-dmg \
             --volname "Nebula" \
             --volicon "apps/desktop/src-tauri/icons/icon.icns" \
-            --background /tmp/dmg-background.png \
             --window-size 600 400 \
             --icon-size 100 \
             --hide-extension "Nebula.app" \
@@ -187,21 +181,15 @@ jobs:
 
       - name: Create DMG with create-dmg
         run: |
-          brew install create-dmg imagemagick
+          brew install create-dmg
           VERSION="${{ steps.version.outputs.version }}"
           APP_PATH="apps/desktop/src-tauri/target/x86_64-apple-darwin/release/bundle/macos/Nebula.app"
           DMG_DIR="apps/desktop/src-tauri/target/x86_64-apple-darwin/release/bundle/dmg"
           mkdir -p "$DMG_DIR"
           rm -f "$DMG_DIR"/*.dmg
-          magick -size 600x400 xc:black \
-            -font Helvetica -fill white -pointsize 13 \
-            -draw "text 95,270 'Nebula'" \
-            -draw "text 405,270 'Applications'" \
-            /tmp/dmg-background.png
           create-dmg \
             --volname "Nebula" \
             --volicon "apps/desktop/src-tauri/icons/icon.icns" \
-            --background /tmp/dmg-background.png \
             --window-size 600 400 \
             --icon-size 100 \
             --hide-extension "Nebula.app" \
