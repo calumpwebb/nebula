@@ -41,6 +41,20 @@ apps/<name>/deploy/manifest.ts (cdk8s), packages/convex, packages/shared, infra/
 - Command timeouts: Use 15s max for polling/waiting commands, then re-check. Avoids long waits. (Exception: test suites can use longer timeouts)
 - Simple scripts: No fancy UI, colors, or box drawing. Plain text output only.
 
+## Environment Detection
+Use `ENVIRONMENT` variable for all environment checks. Never check `CONVEX_CLOUD_URL` or use ad-hoc `isDev` patterns.
+
+```typescript
+import { getEnvironment, Environment } from '@nebula/shared'
+
+const env = getEnvironment()
+if (env === Environment.Local) { ... }
+if (env === 'production') { ... }  // Direct comparison also works
+```
+
+Values: `local` | `production`. Defaults to `local` for safety.
+Env vars: `ENVIRONMENT` (Node.js) / `VITE_ENVIRONMENT` (Vite - requires prefix).
+
 ## Mission Phases
 Brainstorm -> Design -> Plan -> Execute
 
@@ -53,6 +67,16 @@ Index: `docs/KNOWLEDGE_BASE.md`
 
 ## Desktop Icons
 Icons must be **8-bit RGBA PNG**. Use `magick ... PNG32:output.png` to force RGBA. CI fails otherwise.
+
+## Slash Commands
+Commands live in `.claude/commands/`. Keep them as **thin wrappers** around skills:
+```markdown
+---
+description: Short description
+---
+Use the Skill tool to invoke the "skill-name" skill with args: $ARGUMENTS
+```
+Don't duplicate logic—skills hold the implementation, commands provide discoverability.
 
 ## Memory
 "Update your memory" = edit this CLAUDE.md file. Commit after every task completion.
