@@ -38,7 +38,7 @@ Apply these rules in order:
 
 1. **MAJOR** if any commit:
    - Has `BREAKING CHANGE:` in body
-   - Has `!` after type, for example `feat!:` or `fix(desktop)!:`
+   - Has exclamation mark after type, for example `feat(desktop)!:`
 
 2. **MINOR** if any commit:
    - Type is `feat` with desktop-relevant scope
@@ -48,6 +48,7 @@ Apply these rules in order:
 Calculate the new version from the latest tag.
 
 Present to user:
+
 ```
 Current version: 0.1.7
 Commits to include: 3
@@ -65,17 +66,21 @@ Group commits into markdown sections:
 
 ```markdown
 ## Features
+
 - Add frontend console log piping to Rust logger (194f180)
 
 ## Fixes
+
 - Hide .background folder in DMG installer (7841cd0)
 - Force RGBA format on all icon PNGs (46b2ba8, 998432e)
 
 ## Other
+
 - Auto-suggest next patch version in release script (284d5b4)
 ```
 
 Rules:
+
 - `feat` -> Features
 - `fix` -> Fixes
 - `perf` -> Performance
