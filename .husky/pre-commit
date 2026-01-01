@@ -1,0 +1,8 @@
+pnpm lint-staged
+
+if git diff --cached --name-only | grep -q '\.rs$'; then
+  echo "Checking Rust formatting..."
+  cd apps/desktop/src-tauri && cargo fmt --check
+fi
+
+pnpm turbo check
