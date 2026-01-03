@@ -1,11 +1,32 @@
 #!/bin/bash
+#
+# Release Desktop App
+#
+# Creates a git tag that triggers the CI release workflow.
+# GitHub auto-generates release notes from commits since last release.
+#
+# Usage:
+#   ./scripts/release-desktop.sh [options]
+#
+# Options:
+#   --version <semver>  Version to release (e.g., 0.4.5)
+#                       If not provided, prompts interactively with suggested next patch
+#   --force             Skip clean working directory check
+#
+# Examples:
+#   ./scripts/release-desktop.sh                    # Interactive, suggests next patch
+#   ./scripts/release-desktop.sh --version 0.5.0   # Release specific version
+#   ./scripts/release-desktop.sh --force           # Release even with uncommitted changes
+#
 set -e
 
 # Parse arguments
 VERSION=""
+FORCE=false
 while [[ $# -gt 0 ]]; do
     case $1 in
         --version) VERSION="$2"; shift 2 ;;
+        --force) FORCE=true; shift ;;
         *) shift ;;
     esac
 done
@@ -17,9 +38,9 @@ if [ "$BRANCH" != "main" ]; then
     exit 1
 fi
 
-# Must be clean
-if [ -n "$(git status --porcelain)" ]; then
-    echo "Error: Working directory not clean"
+# Must be clean (unless --force)
+if [ "$FORCE" = false ] && [ -n "$(git status --porcelain)" ]; then
+    echo "Error: Working directory not clean (use --force to skip)"
     git status --short
     exit 1
 fi
