@@ -3,7 +3,7 @@ name: commit
 description: Write git commit messages with mandatory ticket references. Ensures all work is tracked in beads. Analyzes staged changes, verifies ticket context, and generates conventional commit messages.
 metadata:
   version: 1.0.0
-  model: claude-opus-4-5-20251101
+  model: haiku
 ---
 
 # Commit
