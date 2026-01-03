@@ -4,6 +4,11 @@ set -e
 commit_msg_file="$1"
 commit_msg=$(cat "$commit_msg_file")
 
+# Allow beads sync commits
+if echo "$commit_msg" | grep -qE '^bd sync:'; then
+  exit 0
+fi
+
 # Pattern: type(NEBULA-xxx) or type(NEBULA-xxx, NEBULA-yyy, ...): message
 pattern='^(feat|fix|chore|docs|refactor|test|ci|perf|build)\((NEBULA-[a-zA-Z0-9]+(,\s*NEBULA-[a-zA-Z0-9]+)*)\):\s+.+'
 
