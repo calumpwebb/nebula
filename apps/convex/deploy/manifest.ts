@@ -11,7 +11,8 @@ export default [
     probe: { type: 'tcp', port: 3210 },
     env: {
       DISABLE_BEACON: 'true',
-      CONVEX_SITE_URL: 'http://127.0.0.1:3211',
+      CONVEX_CLOUD_ORIGIN: 'http://127.0.0.1:3210',
+      CONVEX_SITE_ORIGIN: 'http://127.0.0.1:3211',
     },
   }),
 
