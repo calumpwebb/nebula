@@ -32,3 +32,6 @@ pnpm-debug.log*
 # Test coverage
 coverage/
 apps/desktop/src-tauri/swift-lib/.build/
+
+# Worktrees
+.worktrees/
