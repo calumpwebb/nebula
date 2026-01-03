@@ -1,6 +1,7 @@
 mod updater;
 
 use tauri::menu::{MenuBuilder, MenuItemBuilder, SubmenuBuilder};
+use tauri::Manager;
 use tauri_plugin_log::{Target, TargetKind};
 
 #[tauri::command]
