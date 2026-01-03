@@ -1,6 +1,7 @@
 ---
 name: commit
 description: Write git commit messages with mandatory ticket references. Ensures all work is tracked in beads. Analyzes staged changes, verifies ticket context, and generates conventional commit messages.
+model: haiku
 ---
 
 # Commit
