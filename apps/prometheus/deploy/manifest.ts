@@ -17,4 +17,5 @@ export default app('prometheus', {
   configFiles: {
     '/etc/prometheus/prometheus.yml': './prometheus.yml',
   },
+  extraYaml: ['rbac.yaml'],
 })

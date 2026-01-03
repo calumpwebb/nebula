@@ -1,6 +1,11 @@
 // infra/lib/tiltfile.ts
 
-import type { ManifestDefinition, AppDefinition, SetupScriptDefinition, LocalAppDefinition } from './types'
+import type {
+  ManifestDefinition,
+  AppDefinition,
+  SetupScriptDefinition,
+  LocalAppDefinition,
+} from './types'
 import * as path from 'path'
 
 export function generateTiltfile(
@@ -55,15 +60,17 @@ function generateAppTilt(def: AppDefinition, appDir: string): string[] {
     }
 
     if (config.liveUpdate && config.liveUpdate.length > 0) {
-      const syncs = config.liveUpdate.map(p => {
-        const fullPath = path.resolve(appDir, p)
-        // Convert relative path to absolute container path
-        // Container workdir is /app/apps/<name>, so resolve relative to that
-        const containerPath = p.startsWith('../../')
-          ? '/app/' + p.replace('../../', '')
-          : '/app/apps/' + name.replace('nebula-', '') + '/' + p.replace('./', '')
-        return `    sync('${fullPath}', '${containerPath}')`
-      }).join(',\n')
+      const syncs = config.liveUpdate
+        .map((p) => {
+          const fullPath = path.resolve(appDir, p)
+          // Convert relative path to absolute container path
+          // Container workdir is /app/apps/<name>, so resolve relative to that
+          const containerPath = p.startsWith('../../')
+            ? '/app/' + p.replace('../../', '')
+            : '/app/apps/' + name.replace('nebula-', '') + '/' + p.replace('./', '')
+          return `    sync('${fullPath}', '${containerPath}')`
+        })
+        .join(',\n')
       dockerBuild += `,\n  live_update=[\n${syncs}\n  ]`
     }
 
@@ -74,21 +81,29 @@ function generateAppTilt(def: AppDefinition, appDir: string): string[] {
   // K8s YAML (path relative to dist/ where this Tiltfile lives)
   lines.push(`k8s_yaml('${name}.k8s.yaml')`)
 
+  // Extra K8s YAML files (e.g., RBAC)
+  if ('extraYaml' in config && config.extraYaml) {
+    for (const yamlFile of config.extraYaml) {
+      const yamlPath = path.join(appDir, 'deploy', yamlFile)
+      lines.push(`k8s_yaml('${yamlPath}')`)
+    }
+  }
+
   // K8s resource config
   const resourceParts: string[] = [`  '${name}'`]
 
   if (config.portForwards && config.portForwards.length > 0) {
-    const forwards = config.portForwards.map(p => `'${p}'`).join(', ')
+    const forwards = config.portForwards.map((p) => `'${p}'`).join(', ')
     resourceParts.push(`  port_forwards=[${forwards}]`)
   }
 
   if (config.resourceDeps && config.resourceDeps.length > 0) {
-    const deps = config.resourceDeps.map(d => `'${d}'`).join(', ')
+    const deps = config.resourceDeps.map((d) => `'${d}'`).join(', ')
     resourceParts.push(`  resource_deps=[${deps}]`)
   }
 
   if (config.labels && config.labels.length > 0) {
-    const lbls = config.labels.map(l => `'${l}'`).join(', ')
+    const lbls = config.labels.map((l) => `'${l}'`).join(', ')
     resourceParts.push(`  labels=[${lbls}]`)
   }
 
@@ -108,12 +123,12 @@ function generateSetupScriptTilt(def: SetupScriptDefinition, projectRoot: string
   parts.push(`  dir='${dir}'`)
 
   if (config.resourceDeps && config.resourceDeps.length > 0) {
-    const deps = config.resourceDeps.map(d => `'${d}'`).join(', ')
+    const deps = config.resourceDeps.map((d) => `'${d}'`).join(', ')
     parts.push(`  resource_deps=[${deps}]`)
   }
 
   if (config.labels && config.labels.length > 0) {
-    const lbls = config.labels.map(l => `'${l}'`).join(', ')
+    const lbls = config.labels.map((l) => `'${l}'`).join(', ')
     parts.push(`  labels=[${lbls}]`)
   }
 
@@ -130,12 +145,12 @@ function generateLocalAppTilt(def: LocalAppDefinition, appDir: string): string[]
   parts.push(`  serve_dir='${appDir}'`)
 
   if (config.resourceDeps && config.resourceDeps.length > 0) {
-    const deps = config.resourceDeps.map(d => `'${d}'`).join(', ')
+    const deps = config.resourceDeps.map((d) => `'${d}'`).join(', ')
     parts.push(`  resource_deps=[${deps}]`)
   }
 
   if (config.labels && config.labels.length > 0) {
-    const lbls = config.labels.map(l => `'${l}'`).join(', ')
+    const lbls = config.labels.map((l) => `'${l}'`).join(', ')
     parts.push(`  labels=[${lbls}]`)
   }
 

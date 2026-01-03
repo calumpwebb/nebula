@@ -85,6 +85,8 @@ export interface ImageAppConfig extends BaseConfig {
   configFiles?: Record<string, string>
   /** Host paths to mount (for daemonsets) */
   hostPaths?: HostPathConfig[]
+  /** Extra k8s yaml files to apply (e.g., RBAC) */
+  extraYaml?: string[]
   /** Expose via ingress */
   ingress?: boolean
   /** Port forwards for dev access */
