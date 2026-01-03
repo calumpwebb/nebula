@@ -85,6 +85,10 @@ Index: `docs/KNOWLEDGE_BASE.md`
 
 Icons must be **8-bit RGBA PNG**. Use `magick ... PNG32:output.png` to force RGBA. CI fails otherwise.
 
+## Desktop Releases
+
+Use `./scripts/release-desktop.sh` directly. It handles version bumping, tagging, and pushing. CI builds and publishes the release automatically.
+
 ## Slash Commands
 
 Commands live in `.claude/commands/`. Keep them as **thin wrappers** around skills:
