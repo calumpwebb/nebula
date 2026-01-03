@@ -30,7 +30,6 @@ function LoginPage() {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [name, setName] = useState('')
   const [isVerifying, setIsVerifying] = useState(false)
-  const [_resetCodeSent, setResetCodeSent] = useState(false)
   const [verifiedOtp, setVerifiedOtp] = useState('')
   const [newPassword, setNewPassword] = useState('')
   const [confirmNewPassword, setConfirmNewPassword] = useState('')
@@ -132,12 +131,10 @@ function LoginPage() {
       })
       // Always show success (security - don't reveal if account exists)
       toast.success('if this email exists, we sent a reset code')
-      setResetCodeSent(true)
       setMode('forgot-password-otp')
     } catch {
       // Still show success message for security
       toast.success('if this email exists, we sent a reset code')
-      setResetCodeSent(true)
       setMode('forgot-password-otp')
     }
   }
@@ -229,7 +226,6 @@ function LoginPage() {
     setNewPassword('')
     setConfirmNewPassword('')
     setVerifiedOtp('')
-    setResetCodeSent(false)
   }
 
   // Verify email mode
@@ -275,13 +271,7 @@ function LoginPage() {
               [ send reset code ]
             </TerminalButton>
 
-            <TerminalButton
-              onClick={() => {
-                setMode('sign-in')
-                setResetCodeSent(false)
-              }}
-              variant="link"
-            >
+            <TerminalButton onClick={() => setMode('sign-in')} variant="link">
               {'<'} back to sign in
             </TerminalButton>
           </div>
