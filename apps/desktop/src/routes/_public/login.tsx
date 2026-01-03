@@ -118,7 +118,7 @@ function LoginPage() {
       <div className="flex-1 flex items-center justify-center">
         <div className="w-80 text-white">
           <h1 className="text-2xl mb-4 text-center">Enter Verification Code</h1>
-          <p className="text-gray-400 mb-4 text-center">We sent a 6-digit code to {email}</p>
+          <p className="text-neutral-400 mb-4 text-center">We sent a 6-digit code to {email}</p>
 
           {error && (
             <div className="mb-4 p-2 bg-red-900/50 border border-red-500 rounded text-red-200 text-sm">
@@ -134,7 +134,7 @@ function LoginPage() {
               const value = e.target.value.replace(/\D/g, '').slice(0, 6)
               setOtp(value)
             }}
-            className="w-full mb-4 px-3 py-3 bg-gray-800 border border-gray-700 rounded text-white text-center text-2xl tracking-widest"
+            className="w-full mb-4 px-3 py-3 bg-black border border-neutral-800 rounded text-white text-center text-2xl tracking-widest"
             maxLength={6}
             autoFocus
           />
@@ -150,7 +150,7 @@ function LoginPage() {
           <button
             onClick={handleResendVerification}
             disabled={countdown > 0}
-            className="w-full py-2 mt-3 bg-gray-700 rounded hover:bg-gray-600 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full py-2 mt-3 bg-neutral-800 rounded hover:bg-neutral-700 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {countdown > 0 ? `Resend code in ${countdown}s` : 'Resend Code'}
           </button>
@@ -162,7 +162,7 @@ function LoginPage() {
               setCountdown(30)
               setError('')
             }}
-            className="w-full py-2 mt-2 text-gray-400 hover:text-white"
+            className="w-full py-2 mt-2 text-neutral-400 hover:text-white"
           >
             Back to Login
           </button>
@@ -190,7 +190,7 @@ function LoginPage() {
             placeholder="Name"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full mb-3 px-3 py-2 bg-gray-800 border border-gray-700 rounded text-white"
+            className="w-full mb-3 px-3 py-2 bg-black border border-neutral-800 rounded text-white"
             required
           />
         )}
@@ -201,7 +201,7 @@ function LoginPage() {
           placeholder="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full mb-3 px-3 py-2 bg-gray-800 border border-gray-700 rounded text-white"
+          className="w-full mb-3 px-3 py-2 bg-black border border-neutral-800 rounded text-white"
           required
         />
 
@@ -211,7 +211,7 @@ function LoginPage() {
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full mb-4 px-3 py-2 bg-gray-800 border border-gray-700 rounded text-white"
+          className="w-full mb-4 px-3 py-2 bg-black border border-neutral-800 rounded text-white"
           required
         />
 
@@ -225,7 +225,7 @@ function LoginPage() {
         <button
           type="button"
           onClick={() => setIsSignUp(!isSignUp)}
-          className="w-full py-2 mt-3 text-gray-400 hover:text-white"
+          className="w-full py-2 mt-3 text-neutral-400 hover:text-white"
         >
           {isSignUp ? 'Already have an account? Sign In' : 'Need an account? Sign Up'}
         </button>
