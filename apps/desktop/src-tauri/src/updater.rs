@@ -1,5 +1,5 @@
 use log::{error, info};
-use tauri::{AppHandle, Manager};
+use tauri::AppHandle;
 use tauri_plugin_updater::UpdaterExt;
 
 // Swift function declarations (macOS only)
@@ -118,9 +118,10 @@ async fn do_update_check(
         .download_and_install(
             |chunk_length, content_length| {
                 downloaded += chunk_length;
+                let downloaded_mb = downloaded as f32 / 1_048_576.0;
+
                 if let Some(total) = content_length {
                     let percent = ((downloaded as f64 / total as f64) * 100.0) as i32;
-                    let downloaded_mb = downloaded as f32 / 1_048_576.0;
                     let total_mb = total as f32 / 1_048_576.0;
 
                     #[cfg(target_os = "macos")]
@@ -132,6 +133,14 @@ async fn do_update_check(
                         "Downloaded {:.1} / {:.1} MB ({}%)",
                         downloaded_mb, total_mb, percent
                     );
+                } else {
+                    // No content length - show indeterminate with downloaded size
+                    #[cfg(target_os = "macos")]
+                    unsafe {
+                        swift::update_download_progress(-1, downloaded_mb, 0.0);
+                    }
+
+                    info!("Downloaded {:.1} MB", downloaded_mb);
                 }
             },
             || {
