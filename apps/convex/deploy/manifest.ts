@@ -24,7 +24,7 @@ export default [
   }),
 
   setupScript('convex-auth-setup', {
-    cmd: 'npx convex env set BETTER_AUTH_SECRET "dev-secret-do-not-use-in-production-1234567890"',
+    cmd: 'source .env.local && npx convex env set BETTER_AUTH_SECRET "$BETTER_AUTH_SECRET"',
     cwd: 'packages/convex',
     resourceDeps: ['convex-backend'],
     labels: ['convex'],

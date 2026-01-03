@@ -5,7 +5,7 @@ help:
     @just --list
 
 # Start everything (creates cluster if needed, kills any existing tilt)
-up:
+up: synth
     @pkill -f "tilt up" 2>/dev/null || true
     cd infra && tilt up
 

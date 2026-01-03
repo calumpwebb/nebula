@@ -1,4 +1,5 @@
 import { createClient, type GenericCtx } from '@convex-dev/better-auth'
+import { requireActionCtx } from '@convex-dev/better-auth/utils'
 import { convex, crossDomain } from '@convex-dev/better-auth/plugins'
 import { components, internal } from './_generated/api'
 import type { DataModel } from './_generated/dataModel'
@@ -12,14 +13,9 @@ const siteUrl = process.env.SITE_URL ?? 'http://localhost:1420'
 export const authComponent = createClient<DataModel>(components.betterAuth)
 
 export const createAuth = (ctx: GenericCtx<DataModel>) => {
-  // Cast to access scheduler - HTTP handler context has it but GenericCtx type doesn't
-  const scheduler = (
-    ctx as unknown as {
-      scheduler: {
-        runAfter: (delay: number, fn: unknown, args: unknown) => Promise<void>
-      }
-    }
-  ).scheduler
+  // HTTP handlers always run in action context - use requireActionCtx to narrow the type
+  const actionCtx = requireActionCtx(ctx)
+  const { scheduler } = actionCtx
 
   return betterAuth({
     trustedOrigins: [siteUrl],
