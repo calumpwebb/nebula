@@ -28,17 +28,36 @@ function TerminalInput({
   placeholder?: string
   autoFocus?: boolean
 }) {
+  const [capsLock, setCapsLock] = useState(false)
+  const [isFocused, setIsFocused] = useState(false)
+  const showCapsLockIndicator = type === 'password' && capsLock && isFocused
+
+  const handleKeyEvent = (e: React.KeyboardEvent) => {
+    setCapsLock(e.getModifierState('CapsLock'))
+  }
+
   return (
     <div className="flex items-center gap-2 mb-2">
       <span className="text-white font-bold shrink-0">{label}:</span>
-      <input
-        type={type}
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        placeholder={placeholder}
-        autoFocus={autoFocus}
-        className="flex-1 bg-transparent border-none outline-none text-gray-200 placeholder:text-gray-700"
-      />
+      <div className="flex-1 flex items-center gap-2 min-w-0">
+        <input
+          type={type}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          onKeyDown={handleKeyEvent}
+          onKeyUp={handleKeyEvent}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
+          placeholder={placeholder}
+          autoFocus={autoFocus}
+          className="flex-1 min-w-0 bg-transparent border-none outline-none text-gray-200 placeholder:text-gray-700"
+        />
+        {showCapsLockIndicator && (
+          <span className="text-yellow-500 text-xs shrink-0" title="Caps Lock is on">
+            [CAPS]
+          </span>
+        )}
+      </div>
     </div>
   )
 }
@@ -59,9 +78,9 @@ function TerminalButton({
   const baseStyles =
     'w-full py-1.5 text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
   const variants = {
-    primary: 'text-white hover:text-gray-300 border border-gray-600 hover:border-gray-500',
+    primary: 'text-primary hover:text-primary/80 border border-primary hover:border-primary/80',
     secondary: 'text-gray-500 hover:text-gray-400 border border-gray-700 hover:border-gray-600',
-    link: 'text-gray-600 hover:text-gray-400 border-none',
+    link: 'text-primary/60 hover:text-primary border-none',
   }
 
   return (
@@ -194,7 +213,7 @@ function LoginPage() {
       <div className="text-sm w-[380px]">
         <div className="p-6">
           <div className="flex justify-center mb-6">
-            <pre className="text-white text-[10px] leading-none select-none">{NEBULA_LOGO}</pre>
+            <pre className="text-primary text-[10px] leading-none select-none">{NEBULA_LOGO}</pre>
           </div>
 
           <div className="text-white mb-4">
@@ -263,11 +282,11 @@ function LoginPage() {
     <div className="text-sm w-[380px]">
       <form onSubmit={handleSubmit} noValidate className="p-6">
         <div className="flex justify-center mb-6">
-          <pre className="text-white text-[10px] leading-none select-none">{NEBULA_LOGO}</pre>
+          <pre className="text-primary text-[10px] leading-none select-none">{NEBULA_LOGO}</pre>
         </div>
 
         <div className="text-white mb-4">
-          <span className="text-gray-400">$ </span>
+          <span className="text-primary">$ </span>
           {isSignUp ? 'create_account' : 'sign_in'}
         </div>
 

@@ -26,7 +26,7 @@ function Dashboard() {
         <p className="text-neutral-400 mb-4">{session?.user?.email}</p>
         <button
           onClick={handleSignOut}
-          className="px-4 py-2 bg-white text-black rounded hover:bg-neutral-200"
+          className="px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-primary/80"
         >
           Sign Out
         </button>
