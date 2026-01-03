@@ -454,18 +454,18 @@ Before proceeding to Phase 3:
 
 ### Quality Checks During Generation
 
-| Check                | Requirement                                                                   |
-| -------------------- | ----------------------------------------------------------------------------- |
-| Frontmatter          | Only allowed properties (name, description, license, allowed-tools, metadata) |
-| Name                 | Hyphen-case, ≤64 chars                                                        |
-| Description          | ≤1024 chars, no angle brackets                                                |
-| Triggers             | 3-5 distinct, natural language                                                |
-| Phases               | 1-3 max, not over-engineered                                                  |
-| Verification         | Concrete, measurable                                                          |
-| Tables over prose    | Structured information in tables                                              |
-| No placeholder text  | Every section fully written                                                   |
-| Scripts (if present) | Shebang, docstring, argparse, exit codes, Result pattern                      |
-| Script docs          | Scripts section in SKILL.md with usage examples                               |
+| Check                | Requirement                                                                |
+| -------------------- | -------------------------------------------------------------------------- |
+| Frontmatter          | Only allowed properties (name, description, license, allowed-tools, model) |
+| Name                 | Hyphen-case, ≤64 chars                                                     |
+| Description          | ≤1024 chars, no angle brackets                                             |
+| Triggers             | 3-5 distinct, natural language                                             |
+| Phases               | 1-3 max, not over-engineered                                               |
+| Verification         | Concrete, measurable                                                       |
+| Tables over prose    | Structured information in tables                                           |
+| No placeholder text  | Every section fully written                                                |
+| Scripts (if present) | Shebang, docstring, argparse, exit codes, Result pattern                   |
+| Script docs          | Scripts section in SKILL.md with usage examples                            |
 
 </details>
 
