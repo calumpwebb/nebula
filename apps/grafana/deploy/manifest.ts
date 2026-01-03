@@ -19,5 +19,6 @@ export default app('grafana', {
     '/etc/grafana/provisioning/dashboards/dashboards.yaml':
       './provisioning/dashboards/dashboards.yaml',
     '/etc/grafana/provisioning/dashboards/storage.json': './provisioning/dashboards/storage.json',
+    '/etc/grafana/provisioning/dashboards/cluster.json': './provisioning/dashboards/cluster.json',
   },
 })
