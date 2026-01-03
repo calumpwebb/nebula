@@ -21,13 +21,12 @@
  */
 
 import { customQuery, customMutation, customAction } from 'convex-helpers/server/customFunctions'
-import type { MiddlewareConfig, ClientConfig, ServerConfig } from './types'
+import type { MiddlewareConfig } from './types'
 
 /**
  * Client middleware - exposes inject function for wrapping hooks.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type ClientMiddleware<TInject extends Record<string, any>> = {
+export type ClientMiddleware<TInject extends object> = {
   /** Returns arguments to inject into every request */
   inject: () => TInject
   /** Optional callback after response is received */
@@ -100,11 +99,14 @@ export type ServerMiddleware = {
 /**
  * Result of building middleware from a config.
  */
-export type BuiltMiddleware<TConfig extends MiddlewareConfig> = {
-  server: TConfig['server'] extends ServerConfig<unknown, infer _TCtxAdditions, string>
-    ? ServerMiddleware
-    : null
-  client: TConfig['client'] extends ClientConfig<infer TInject> ? ClientMiddleware<TInject> : null
+export type BuiltMiddleware<
+  TInject extends object = object,
+  _TExtract = unknown,
+  _TCtxAdditions extends object = Record<string, never>,
+  _TStrip extends string = never,
+> = {
+  server: ServerMiddleware | null
+  client: ClientMiddleware<TInject> | null
 }
 
 /**
@@ -131,10 +133,12 @@ function stripKeys<T extends Record<string, unknown>, K extends string>(
  * - Strip middleware-specific args before passing to handler
  */
 
-function buildServerMiddleware(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  config: MiddlewareConfig<any, any, any, any>
-): ServerMiddleware {
+function buildServerMiddleware<
+  TInject extends object = object,
+  TExtract = unknown,
+  TCtxAdditions extends object = Record<string, never>,
+  TStrip extends string = never,
+>(config: MiddlewareConfig<TInject, TExtract, TCtxAdditions, TStrip>): ServerMiddleware {
   const serverConfig = config.server!
 
   // Create a reusable input function
@@ -202,11 +206,12 @@ function buildServerMiddleware(
  * Returns the inject function and optional afterResponse callback.
  */
 
-function buildClientMiddleware(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  config: MiddlewareConfig<any, any, any, any>
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): ClientMiddleware<any> {
+function buildClientMiddleware<
+  TInject extends object = object,
+  TExtract = unknown,
+  TCtxAdditions extends object = Record<string, never>,
+  TStrip extends string = never,
+>(config: MiddlewareConfig<TInject, TExtract, TCtxAdditions, TStrip>): ClientMiddleware<TInject> {
   const clientConfig = config.client!
 
   return {
@@ -234,11 +239,14 @@ function buildClientMiddleware(
  * ```
  */
 
-export function buildMiddleware(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  config: MiddlewareConfig<any, any, any, any>
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-): BuiltMiddleware<any> {
+export function buildMiddleware<
+  TInject extends object = object,
+  TExtract = unknown,
+  TCtxAdditions extends object = Record<string, never>,
+  TStrip extends string = never,
+>(
+  config: MiddlewareConfig<TInject, TExtract, TCtxAdditions, TStrip>
+): BuiltMiddleware<TInject, TExtract, TCtxAdditions, TStrip> {
   return {
     server: config.server ? buildServerMiddleware(config) : null,
     client: config.client ? buildClientMiddleware(config) : null,

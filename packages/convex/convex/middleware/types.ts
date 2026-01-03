@@ -16,8 +16,7 @@ import type { DataModel } from '../_generated/dataModel'
  * Client-side middleware configuration.
  * Handles argument injection before requests are sent.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type ClientConfig<TInject extends Record<string, any>> = {
+export type ClientConfig<TInject extends object> = {
   /** Returns arguments to inject into every request */
   inject: () => TInject
   /** Optional callback after response is received */
@@ -31,8 +30,7 @@ export type ClientConfig<TInject extends Record<string, any>> = {
 
 export type ServerConfig<
   TExtract,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  TCtxAdditions extends Record<string, any> = Record<string, never>,
+  TCtxAdditions extends object = Record<string, never>,
   TStrip extends string = never,
 > = {
   /** Extracts a value from the incoming arguments */
@@ -63,11 +61,9 @@ export type ServerConfig<
  */
 
 export type MiddlewareConfig<
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  TInject extends Record<string, any> = Record<string, any>,
+  TInject extends object = object,
   TExtract = unknown,
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  TCtxAdditions extends Record<string, any> = Record<string, never>,
+  TCtxAdditions extends object = Record<string, never>,
   TStrip extends string = never,
 > = {
   /** Unique name for this middleware (used in logging) */
@@ -80,11 +76,19 @@ export type MiddlewareConfig<
 
 /**
  * HTTP Request type for httpAction middleware.
- * This is the standard Fetch API Request available in Convex runtime.
- * Using a type alias to avoid DOM lib dependency in tsconfig.
+ * Minimal interface for the Fetch API Request available in Convex runtime.
+ * Avoids DOM lib dependency while maintaining type safety.
  */
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type HttpRequest = any
+interface HttpRequest {
+  method: string
+  url: string
+  headers: {
+    get(name: string): string | null
+    set(name: string, value: string): void
+  }
+  json: () => Promise<unknown>
+  text: () => Promise<string>
+}
 
 /**
  * HTTP middleware configuration (for httpAction only).
