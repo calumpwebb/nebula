@@ -16,7 +16,8 @@ import type { DataModel } from '../_generated/dataModel'
  * Client-side middleware configuration.
  * Handles argument injection before requests are sent.
  */
-export type ClientConfig<TInject extends Record<string, unknown>> = {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type ClientConfig<TInject extends Record<string, any>> = {
   /** Returns arguments to inject into every request */
   inject: () => TInject
   /** Optional callback after response is received */
@@ -27,9 +28,11 @@ export type ClientConfig<TInject extends Record<string, unknown>> = {
  * Server-side middleware configuration.
  * Handles argument extraction, context modification, and arg stripping.
  */
+
 export type ServerConfig<
   TExtract,
-  TCtxAdditions extends Record<string, unknown> = Record<string, never>,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  TCtxAdditions extends Record<string, any> = Record<string, never>,
   TStrip extends string = never,
 > = {
   /** Extracts a value from the incoming arguments */
@@ -58,10 +61,13 @@ export type ServerConfig<
  * @typeParam TCtxAdditions - Properties added to context
  * @typeParam TStrip - Argument keys to strip from args
  */
+
 export type MiddlewareConfig<
-  TInject extends Record<string, unknown> = Record<string, unknown>,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  TInject extends Record<string, any> = Record<string, any>,
   TExtract = unknown,
-  TCtxAdditions extends Record<string, unknown> = Record<string, never>,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  TCtxAdditions extends Record<string, any> = Record<string, never>,
   TStrip extends string = never,
 > = {
   /** Unique name for this middleware (used in logging) */
