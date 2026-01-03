@@ -7,5 +7,13 @@ export const Route = createFileRoute('/_public')({
       throw redirect({ to: '/' })
     }
   },
-  component: () => <Outlet />,
+  component: PublicLayout,
 })
+
+function PublicLayout() {
+  return (
+    <div className="flex-1 flex flex-col items-center justify-center font-mono">
+      <Outlet />
+    </div>
+  )
+}

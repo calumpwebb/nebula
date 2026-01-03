@@ -1,4 +1,4 @@
-import { createFileRoute, useRouter } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useState, useEffect } from 'react'
 import { authClient } from '../../lib/auth-client'
 
@@ -7,7 +7,8 @@ export const Route = createFileRoute('/_public/login')({
 })
 
 function LoginPage() {
-  const router = useRouter()
+  const navigate = useNavigate()
+  const { data: session } = authClient.useSession()
   const [isSignUp, setIsSignUp] = useState(false)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -17,6 +18,13 @@ function LoginPage() {
   const [otp, setOtp] = useState('')
   const [countdown, setCountdown] = useState(30)
   const [isVerifying, setIsVerifying] = useState(false)
+
+  // Navigate to dashboard when session becomes available
+  useEffect(() => {
+    if (session?.user) {
+      navigate({ to: '/' })
+    }
+  }, [session, navigate])
 
   // Countdown timer for resend button
   useEffect(() => {
@@ -57,10 +65,8 @@ function LoginPage() {
           } else {
             setError(result.error.message || 'Sign in failed')
           }
-        } else {
-          // Session updated - invalidate router to trigger beforeLoad redirect
-          await router.invalidate()
         }
+        // On success, the useEffect watching session will navigate us
       }
     } catch {
       setError('An unexpected error occurred')
@@ -102,10 +108,8 @@ function LoginPage() {
       })
       if (result.error) {
         setError(result.error.message || 'Invalid verification code')
-      } else {
-        // Session updated - invalidate router to trigger beforeLoad redirect
-        await router.invalidate()
       }
+      // On success, the useEffect watching session will navigate us
     } catch {
       setError('Verification failed')
     } finally {
