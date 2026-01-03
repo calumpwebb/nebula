@@ -1,6 +1,6 @@
 import { httpRouter } from 'convex/server'
-import { authComponent, createAuth } from './auth'
-import { latest } from './updates'
+import { authComponent, createAuth } from './features/auth'
+import { latest } from './features/updates/http'
 
 const http = httpRouter()
 

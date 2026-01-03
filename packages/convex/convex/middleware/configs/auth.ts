@@ -1,5 +1,5 @@
 import type { MiddlewareConfig } from '../types'
-import { authComponent } from '../../auth'
+import { authComponent } from '../../features/auth'
 
 export const auth: MiddlewareConfig<
   Record<string, never>,

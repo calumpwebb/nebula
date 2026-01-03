@@ -1,13 +1,12 @@
 import { createClient, type GenericCtx } from '@convex-dev/better-auth'
 import { requireActionCtx } from '@convex-dev/better-auth/utils'
 import { convex, crossDomain } from '@convex-dev/better-auth/plugins'
-import { components, internal } from './_generated/api'
-import type { DataModel } from './_generated/dataModel'
-import { query } from './_generated/server'
+import { components, internal } from '../../_generated/api'
+import type { DataModel } from '../../_generated/dataModel'
 import { betterAuth } from 'better-auth/minimal'
 import { emailOTP } from 'better-auth/plugins'
-import authConfig from './auth.config'
-import { sendEmail } from './emails'
+import authConfig from '../../auth.config'
+import { sendEmail } from '../../lib/emails'
 
 // TODO(NEBULA-uy7): Set SITE_URL env var in production
 const siteUrl = process.env.SITE_URL ?? 'http://localhost:1420'
@@ -85,11 +84,3 @@ export const createAuth = (ctx: GenericCtx<DataModel>) => {
     ],
   })
 }
-
-// Public query - anyone can check if they're logged in
-export const getCurrentUser = query({
-  args: {},
-  handler: async (ctx) => {
-    return authComponent.getAuthUser(ctx)
-  },
-})

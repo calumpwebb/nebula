@@ -1,4 +1,4 @@
-import { httpAction } from './_generated/server'
+import { httpAction } from '../../_generated/server'
 
 const GITHUB_RELEASES_URL =
   'https://github.com/calumpwebb/nebula/releases/latest/download/latest.json'
