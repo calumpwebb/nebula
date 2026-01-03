@@ -3,11 +3,9 @@ set -e
 
 # Parse arguments
 VERSION=""
-NOTES=""
 while [[ $# -gt 0 ]]; do
     case $1 in
         --version) VERSION="$2"; shift 2 ;;
-        --notes) NOTES="$2"; shift 2 ;;
         *) shift ;;
     esac
 done
@@ -57,21 +55,17 @@ if git tag -l | grep -q "^$TAG$"; then
     exit 1
 fi
 
-# Confirm (skip if notes provided = non-interactive mode)
+# Confirm
 echo ""
 echo "Tag: $TAG"
 echo "Commit: $(git rev-parse --short HEAD)"
-if [ -z "$NOTES" ]; then
+if [ -z "$VERSION" ] || [ -t 0 ]; then
     read -p "Create and push? [Y/n] " CONFIRM
     [[ "$CONFIRM" =~ ^[nN]$ ]] && exit 0
 fi
 
-# Create tag (annotated if notes provided, lightweight otherwise)
-if [ -n "$NOTES" ]; then
-    git tag -a "$TAG" -m "$NOTES"
-else
-    git tag "$TAG"
-fi
+# Create lightweight tag (GitHub auto-generates release notes)
+git tag "$TAG"
 git push origin "$TAG"
 
 echo ""

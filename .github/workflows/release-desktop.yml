@@ -311,24 +311,6 @@ jobs:
         id: version
         run: echo "version=${GITHUB_REF#refs/tags/desktop-v}" >> $GITHUB_OUTPUT
 
-      - name: Extract release notes from tag
-        run: |
-          TAG_MESSAGE=$(git tag -l --format='%(contents)' "${GITHUB_REF#refs/tags/}")
-
-          if [ -z "$TAG_MESSAGE" ]; then
-            # Fallback for lightweight tags
-            PREV_TAG=$(git tag -l "desktop-v*" --sort=-v:refname | sed -n '2p')
-            if [ -n "$PREV_TAG" ]; then
-              TAG_MESSAGE=$(git log ${PREV_TAG}..HEAD --oneline --no-merges | head -20)
-            else
-              TAG_MESSAGE="Release ${{ steps.version.outputs.version }}"
-            fi
-          fi
-
-          echo "$TAG_MESSAGE" > release_notes.md
-          echo "Release notes:"
-          cat release_notes.md
-
       - name: Download macOS arm64 artifacts
         uses: actions/download-artifact@v4
         with:
@@ -361,13 +343,10 @@ jobs:
           MAC_X64_SIG=$(find artifacts/macos-x64 -name "*.app.tar.gz.sig" -exec cat {} \; 2>/dev/null || echo "")
           LINUX_SIG=$(find artifacts/linux -name "*.AppImage.tar.gz.sig" -exec cat {} \; 2>/dev/null || echo "")
 
-          # Get first non-empty line from release notes for the manifest
-          NOTES_SUMMARY=$(grep -v '^$' release_notes.md | head -1 | sed 's/^#* *//')
-
           cat > artifacts/latest.json << EOF
           {
             "version": "$VERSION",
-            "notes": "$NOTES_SUMMARY",
+            "notes": "See https://github.com/$REPO/releases/tag/desktop-v$VERSION",
             "pub_date": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
             "platforms": {
               "darwin-aarch64": {
@@ -392,7 +371,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           name: Desktop v${{ steps.version.outputs.version }}
-          body_path: release_notes.md
+          generate_release_notes: true
           draft: false
           prerelease: false
           files: |
