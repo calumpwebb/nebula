@@ -150,7 +150,7 @@ public func showDownloadDialog() {
 public func updateDownloadProgress(percent: Int32, downloadedMB: Float, totalMB: Float) {
     DispatchQueue.main.async {
         progressBar?.doubleValue = Double(percent)
-        statusLabel?.stringValue = String(format: "Downloading... %.1f / %.1f MB", downloadedMB, totalMB)
+        statusLabel?.stringValue = String(format: "Downloading... %.1f / %.1f MB (%d%%)", downloadedMB, totalMB, percent)
     }
 }
 
