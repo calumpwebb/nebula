@@ -166,6 +166,14 @@ export function generateK8sResources(
   // Determine workload kind
   const isDaemonSet = 'kind' in config && config.kind === 'daemonset'
 
+  // Build container ports - main port plus any additional
+  const containerPorts: { containerPort: number; name: string }[] = [{ containerPort, name: 'app' }]
+  if ('ports' in config && config.ports) {
+    for (const p of config.ports) {
+      containerPorts.push({ containerPort: p.port, name: p.name })
+    }
+  }
+
   // Pod spec (shared between Deployment and DaemonSet)
   const podSpec = {
     containers: [
@@ -173,7 +181,7 @@ export function generateK8sResources(
         name,
         image,
         imagePullPolicy: 'IfNotPresent' as const,
-        ports: [{ containerPort, name: 'app' }],
+        ports: containerPorts,
         env: Object.entries(env).map(([n, value]) => ({ name: n, value: String(value) })),
         ...('args' in config && config.args ? { args: config.args } : {}),
         ...(readinessProbe ? { readinessProbe } : {}),
@@ -211,12 +219,24 @@ export function generateK8sResources(
       },
     })
 
-    // Create Service
+    // Create Service - include probe port plus any additional ports
+    const servicePorts = [
+      { name: 'app', port: containerPort, targetPort: IntOrString.fromNumber(containerPort) },
+    ]
+    if ('ports' in config && config.ports) {
+      for (const p of config.ports) {
+        servicePorts.push({
+          name: p.name,
+          port: p.port,
+          targetPort: IntOrString.fromNumber(p.port),
+        })
+      }
+    }
     new KubeService(chart, `${name}-service`, {
       metadata: { name, labels },
       spec: {
         selector: { app: name },
-        ports: [{ port: containerPort, targetPort: IntOrString.fromNumber(containerPort) }],
+        ports: servicePorts,
       },
     })
   }

@@ -21,6 +21,9 @@ export default [
     portForwards: ['6791:6791'],
     resourceDeps: ['convex-backend'],
     probe: { type: 'http', path: '/', port: 6791 },
+    env: {
+      NEXT_PUBLIC_DEPLOYMENT_URL: 'http://127.0.0.1:3210',
+    },
   }),
 
   setupScript('convex-auth-setup', {

@@ -68,6 +68,14 @@ export interface HostPathConfig {
   readOnly?: boolean
 }
 
+/** Additional port to expose on service */
+export interface PortConfig {
+  /** Port name (e.g., 'smtp') */
+  name: string
+  /** Port number */
+  port: number
+}
+
 /** App using pre-built image */
 export interface ImageAppConfig extends BaseConfig {
   /** Container image (e.g., 'grafana/grafana:11') */
@@ -95,6 +103,8 @@ export interface ImageAppConfig extends BaseConfig {
   storage?: StorageConfig
   /** Health probe config (defaults to HTTP /health:8080) */
   probe?: ProbeConfig
+  /** Additional ports to expose on the service (beyond probe port) */
+  ports?: PortConfig[]
 }
 
 /** Configuration for app() - must have either dockerfile or image */

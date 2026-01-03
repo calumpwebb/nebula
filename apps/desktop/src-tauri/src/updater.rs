@@ -7,12 +7,16 @@ use tauri_plugin_updater::UpdaterExt;
 mod swift {
     use swift_rs::{swift, SRString};
 
+    swift!(pub fn show_checking_dialog());
+    swift!(pub fn dismiss_update_panel());
+    swift!(pub fn show_download_dialog());
+    swift!(pub fn update_download_progress(percent: i32, downloaded_mb: f32, total_mb: f32));
+    swift!(pub fn show_installing_state());
     swift!(pub fn show_up_to_date_dialog(version: &SRString));
-    swift!(pub fn show_update_available_dialog(
+    swift!(pub fn show_update_required_dialog(
         current_version: &SRString,
         new_version: &SRString
-    ) -> bool);
-    swift!(pub fn show_update_required_dialog(new_version: &SRString));
+    ));
     swift!(pub fn show_update_error_dialog(error_message: &SRString));
 }
 
@@ -48,30 +52,38 @@ async fn do_update_check(
 ) -> Result<bool, Box<dyn std::error::Error>> {
     let updater = app.updater()?;
 
+    // Show checking dialog
+    #[cfg(target_os = "macos")]
+    unsafe {
+        swift::show_checking_dialog();
+    }
+
     info!("Checking for updates...");
 
     let update = match updater.check().await {
         Ok(Some(update)) => update,
         Ok(None) => {
             info!("No update available");
-            if show_up_to_date {
-                #[cfg(target_os = "macos")]
-                {
+            #[cfg(target_os = "macos")]
+            unsafe {
+                swift::dismiss_update_panel();
+                if show_up_to_date {
                     use swift_rs::SRString;
                     let version: SRString = app.package_info().version.to_string().as_str().into();
-                    unsafe { swift::show_up_to_date_dialog(&version) };
+                    swift::show_up_to_date_dialog(&version);
                 }
             }
             return Ok(true);
         }
         Err(e) => {
             error!("Update check failed: {}", e);
-            if show_up_to_date {
-                #[cfg(target_os = "macos")]
-                {
+            #[cfg(target_os = "macos")]
+            unsafe {
+                swift::dismiss_update_panel();
+                if show_up_to_date {
                     use swift_rs::SRString;
                     let error_msg: SRString = e.to_string().as_str().into();
-                    unsafe { swift::show_update_error_dialog(&error_msg) };
+                    swift::show_update_error_dialog(&error_msg);
                 }
             }
             return Ok(true);
@@ -82,33 +94,63 @@ async fn do_update_check(
     let latest = update.version.clone();
     info!("Update available: {} -> {}", current, latest);
 
-    // Show native dialog via Swift
+    // Dismiss checking, show update required dialog
     #[cfg(target_os = "macos")]
-    {
+    unsafe {
+        swift::dismiss_update_panel();
         use swift_rs::SRString;
+        let current_str: SRString = current.as_str().into();
         let latest_str: SRString = latest.as_str().into();
-        unsafe { swift::show_update_required_dialog(&latest_str) };
+        swift::show_update_required_dialog(&current_str, &latest_str);
+    }
+
+    // Show download progress dialog
+    #[cfg(target_os = "macos")]
+    unsafe {
+        swift::show_download_dialog();
     }
 
     info!("Downloading update...");
 
-    // Download and install
-    let mut downloaded = 0;
+    // Download and install with progress
+    let mut downloaded: usize = 0;
     let _ = update
         .download_and_install(
             |chunk_length, content_length| {
                 downloaded += chunk_length;
                 if let Some(total) = content_length {
-                    info!("Downloaded {} / {} bytes", downloaded, total);
+                    let percent = ((downloaded as f64 / total as f64) * 100.0) as i32;
+                    let downloaded_mb = downloaded as f32 / 1_048_576.0;
+                    let total_mb = total as f32 / 1_048_576.0;
+
+                    #[cfg(target_os = "macos")]
+                    unsafe {
+                        swift::update_download_progress(percent, downloaded_mb, total_mb);
+                    }
+
+                    info!(
+                        "Downloaded {:.1} / {:.1} MB ({}%)",
+                        downloaded_mb, total_mb, percent
+                    );
                 }
             },
             || {
                 info!("Download complete, installing...");
+                #[cfg(target_os = "macos")]
+                unsafe {
+                    swift::show_installing_state();
+                }
             },
         )
         .await?;
 
     info!("Update installed, restarting...");
+
+    #[cfg(target_os = "macos")]
+    unsafe {
+        swift::dismiss_update_panel();
+    }
+
     app.restart();
 }
 

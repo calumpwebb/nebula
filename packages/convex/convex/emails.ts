@@ -1,35 +1,29 @@
-'use node'
-
-import { internalAction } from './_generated/server'
-import { v } from 'convex/values'
-import nodemailer from 'nodemailer'
 import { getEnvironment, Environment } from '@nebula/shared'
 
 const env = getEnvironment()
 
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST ?? 'mailpit',
-  port: parseInt(process.env.SMTP_PORT ?? '1025'),
-  secure: false, // No TLS for local dev (Mailpit)
-})
+// Mailpit API endpoint (local dev only)
+const MAILPIT_API = process.env.MAILPIT_API_URL ?? 'http://mailpit:8025/api/v1/send'
 
-export const send = internalAction({
-  args: {
-    to: v.string(),
-    subject: v.string(),
-    html: v.string(),
-  },
-  handler: async (ctx, { to, subject, html }) => {
-    if (env === Environment.Production) {
-      // TODO(NEBULA-c36): Use Resend SDK
-      throw new Error('Production email not configured')
-    }
+/** Send email via Mailpit HTTP API */
+export async function sendEmail(to: string, subject: string, html: string) {
+  if (env === Environment.Production) {
+    // TODO(NEBULA-c36): Use Resend SDK
+    throw new Error('Production email not configured')
+  }
 
-    await transporter.sendMail({
-      from: 'Nebula <noreply@nebula.local>',
-      to,
-      subject,
-      html,
-    })
-  },
-})
+  const response = await fetch(MAILPIT_API, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      From: { Email: 'noreply@nebula.local', Name: 'Nebula' },
+      To: [{ Email: to }],
+      Subject: subject,
+      HTML: html,
+    }),
+  })
+
+  if (!response.ok) {
+    throw new Error(`Failed to send email: ${response.status} ${response.statusText}`)
+  }
+}

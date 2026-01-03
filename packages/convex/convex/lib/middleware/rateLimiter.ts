@@ -48,4 +48,11 @@ export const rateLimiter = new RateLimiter(components.rateLimiter, {
     period: HOUR,
     capacity: isLocal ? 50 : 5,
   },
+
+  // OTP send cooldown: 1 per 30 seconds per email
+  otpSend: {
+    kind: 'fixed window',
+    rate: 1,
+    period: 30 * 1000, // 30 seconds
+  },
 })

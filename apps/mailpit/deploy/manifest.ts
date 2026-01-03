@@ -7,6 +7,7 @@ export default app('mailpit', {
   labels: ['mailpit'],
   portForwards: ['8025:8025'],
   probe: { type: 'http', path: '/livez', port: 8025 },
+  ports: [{ name: 'smtp', port: 1025 }],
   env: {
     MP_SMTP_AUTH_ACCEPT_ANY: '1',
     MP_SMTP_AUTH_ALLOW_INSECURE: '1',

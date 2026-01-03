@@ -304,7 +304,7 @@
         },
         "overrides": []
       },
-      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 14 },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 14 },
       "id": 7,
       "options": {
         "legend": {
@@ -363,7 +363,7 @@
         },
         "overrides": []
       },
-      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 22 },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 14 },
       "id": 8,
       "options": {
         "legend": {

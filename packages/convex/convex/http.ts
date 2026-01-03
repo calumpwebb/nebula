@@ -1,9 +1,17 @@
-import { httpRouter } from "convex/server";
-import { authComponent, createAuth } from "./auth";
+import { httpRouter } from 'convex/server'
+import { authComponent, createAuth } from './auth'
+import { latest } from './updates'
 
-const http = httpRouter();
+const http = httpRouter()
 
 // Register Better Auth routes with CORS for cross-domain requests
-authComponent.registerRoutes(http, createAuth, { cors: true });
+authComponent.registerRoutes(http, createAuth, { cors: true })
 
-export default http;
+// Desktop app update check proxy
+http.route({
+  path: '/updates/latest.json',
+  method: 'GET',
+  handler: latest,
+})
+
+export default http

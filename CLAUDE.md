@@ -50,6 +50,7 @@ apps/<name>/deploy/manifest.ts (cdk8s), packages/convex, packages/shared, infra/
 - Run `just up` before type-checking convex (generates \_generated/)
 - Command timeouts: Use 15s max for polling/waiting commands, then re-check. Avoids long waits. (Exception: test suites can use longer timeouts)
 - Simple scripts: No fancy UI, colors, or box drawing. Plain text output only.
+- No lazy loading: Avoid dynamic imports and lazy loading patterns. Prefer simpler alternatives (e.g., HTTP APIs over Node.js-specific libraries).
 
 ## Environment Detection
 
