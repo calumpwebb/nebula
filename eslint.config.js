@@ -1,5 +1,6 @@
 import eslint from '@eslint/js'
 import tseslint from 'typescript-eslint'
+import nebulaPlugin from './packages/eslint-plugin-nebula/src/index.js'
 
 export default tseslint.config(
   eslint.configs.recommended,
@@ -15,6 +16,9 @@ export default tseslint.config(
     ],
   },
   {
+    plugins: {
+      nebula: nebulaPlugin,
+    },
     rules: {
       '@typescript-eslint/no-unused-vars': [
         'error',
@@ -25,6 +29,8 @@ export default tseslint.config(
         'error',
         { path: 'always', types: 'prefer-import', lib: 'always' },
       ],
+      // Nebula custom rules
+      'nebula/require-skip-auth-reason': 'error',
     },
   }
 )
