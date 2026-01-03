@@ -108,22 +108,20 @@ python scripts/package_skill.py ~/.claude/skills/my-skill/ ./dist
 
 Skills must use only these allowed frontmatter properties:
 
-| Property        | Required | Description                          |
-| --------------- | -------- | ------------------------------------ |
-| `name`          | Yes      | Hyphen-case, max 64 chars            |
-| `description`   | Yes      | Max 1024 chars, no angle brackets    |
-| `license`       | No       | MIT, Apache-2.0, etc.                |
-| `allowed-tools` | No       | Restrict tool access                 |
-| `metadata`      | No       | Custom fields (version, model, etc.) |
+| Property        | Required | Description                        |
+| --------------- | -------- | ---------------------------------- |
+| `name`          | Yes      | Hyphen-case, max 64 chars          |
+| `description`   | Yes      | Max 1024 chars, no angle brackets  |
+| `license`       | No       | MIT, Apache-2.0, etc.              |
+| `allowed-tools` | No       | Restrict tool access               |
+| `model`         | No       | Model to use (e.g., haiku, sonnet) |
 
 ```yaml
 ---
 name: my-skill
 description: What this skill does
 license: MIT
-metadata:
-  version: 1.0.0
-  model: claude-opus-4-5-20251101
+model: haiku
 ---
 ```
 
