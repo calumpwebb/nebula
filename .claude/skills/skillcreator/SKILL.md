@@ -1,7 +1,7 @@
 ---
 name: skillcreator
 description: Creates production-ready Claude Code skills through autonomous analysis, specification, generation, and multi-agent review. Use when you need to build new skills or refine existing ones to meet quality standards.
-model: haiku
+model: claude-haiku-4-5-20251001
 ---
 
 # SkillCreator 3.2 - Ultimate Meta-Skill

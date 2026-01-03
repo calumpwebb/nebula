@@ -4,13 +4,13 @@
 
 Skills must use only these allowed frontmatter properties:
 
-| Property        | Required | Description                        |
-| --------------- | -------- | ---------------------------------- |
-| `name`          | Yes      | Hyphen-case, max 64 chars          |
-| `description`   | Yes      | Max 1024 chars, no angle brackets  |
-| `license`       | No       | MIT, Apache-2.0, etc.              |
-| `allowed-tools` | No       | Restrict tool access               |
-| `model`         | No       | Model to use (e.g., haiku, sonnet) |
+| Property        | Required | Description                                                              |
+| --------------- | -------- | ------------------------------------------------------------------------ |
+| `name`          | Yes      | Hyphen-case, max 64 chars                                                |
+| `description`   | Yes      | Max 1024 chars, no angle brackets                                        |
+| `license`       | No       | MIT, Apache-2.0, etc.                                                    |
+| `allowed-tools` | No       | Restrict tool access                                                     |
+| `model`         | No       | Model to use (e.g., claude-haiku-4-5-20251001, claude-sonnet-4-20250514) |
 
 **Example:**
 
@@ -19,7 +19,7 @@ Skills must use only these allowed frontmatter properties:
 name: my-skill
 description: What this skill does and when to use it
 license: MIT
-model: haiku
+model: claude-haiku-4-5-20251001
 ---
 ```
 

@@ -1,7 +1,7 @@
 ---
 name: beads-todo
 description: Create todos in beads with smart semantic duplicate detection - prevents creating todos that match existing ones even when worded differently
-model: haiku
+model: claude-haiku-4-5-20251001
 ---
 
 # Beads Todo Creator

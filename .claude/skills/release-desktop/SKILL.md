@@ -1,7 +1,7 @@
 ---
 name: release-desktop
 description: Use when releasing the desktop app - analyzes commits, suggests semver, generates release notes, and orchestrates the full release workflow
-model: haiku
+model: claude-haiku-4-5-20251001
 ---
 
 # Release Desktop Workflow
