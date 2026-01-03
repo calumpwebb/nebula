@@ -15,7 +15,21 @@ env:
   TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
 
 jobs:
+  preflight:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if release already exists
+        run: |
+          if gh release view "${{ github.ref_name }}" --repo "${{ github.repository }}" &>/dev/null; then
+            echo "::error::Release ${{ github.ref_name }} already exists. Delete it first or use a new version."
+            exit 1
+          fi
+          echo "✓ No existing release for ${{ github.ref_name }}"
+        env:
+          GH_TOKEN: ${{ github.token }}
+
   build-macos-arm64:
+    needs: preflight
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
@@ -112,6 +126,7 @@ jobs:
             apps/desktop/src-tauri/target/aarch64-apple-darwin/release/bundle/macos/*.app.tar.gz.sig
 
   build-macos-x64:
+    needs: preflight
     runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
@@ -208,6 +223,7 @@ jobs:
             apps/desktop/src-tauri/target/x86_64-apple-darwin/release/bundle/macos/*.app.tar.gz.sig
 
   build-linux:
+    needs: preflight
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
