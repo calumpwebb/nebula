@@ -385,3 +385,17 @@ jobs:
         run: gh release delete "${{ github.ref_name }}" --yes --cleanup-tag 2>/dev/null || true
         env:
           GH_TOKEN: ${{ github.token }}
+
+  # Clean up orphan tags when workflow is cancelled (e.g., by a newer release)
+  cleanup-on-cancel:
+    if: cancelled()
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Delete orphan tag
+        run: |
+          echo "Workflow cancelled - deleting orphan tag ${{ github.ref_name }}"
+          gh api -X DELETE "repos/${{ github.repository }}/git/refs/tags/${GITHUB_REF#refs/tags/}" || true
+        env:
+          GH_TOKEN: ${{ github.token }}
