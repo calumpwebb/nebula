@@ -160,6 +160,18 @@ function LoginPage() {
           />
         )}
 
+        {mode === 'sign-in' && (
+          <div className="mt-1">
+            <button
+              type="button"
+              onClick={() => setMode('forgot-password-email')}
+              className="text-xs text-gray-500 hover:text-gray-400 transition-colors"
+            >
+              forgot password?
+            </button>
+          </div>
+        )}
+
         <div className="mt-4 space-y-2">
           <TerminalButton type="submit" variant="primary">
             {mode === 'sign-up' ? '[ create account ]' : '[ sign in ]'}
