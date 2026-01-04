@@ -27,18 +27,6 @@ function SignupPage() {
       password: '',
       confirmPassword: '',
     },
-    validators: {
-      onChange: ({ value }) => {
-        if (value.password !== value.confirmPassword) {
-          return {
-            fields: {
-              confirmPassword: 'Passwords do not match',
-            },
-          }
-        }
-        return undefined
-      },
-    },
     onSubmit: async ({ value }) => {
       setFormError('')
 
@@ -66,13 +54,35 @@ function SignupPage() {
         }}
         noValidate
         autoComplete="on"
-        className="bg-white rounded-lg border border-border shadow-[var(--card-shadow)] p-8"
+        className="bg-white rounded-lg border border-border shadow-card px-8 pt-8 pb-3"
       >
         <div className="text-center mb-6">
           <h2 className="text-xl font-semibold text-foreground">Create account</h2>
         </div>
 
-        <form.Field name="name">
+        {formError && (
+          <div className="mb-4 p-3 bg-destructive/10 border border-destructive/50 rounded-md flex items-start gap-2">
+            <svg
+              className="w-4 h-4 text-destructive flex-shrink-0 mt-0.5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+            <p className="text-sm text-destructive">{formError}</p>
+          </div>
+        )}
+
+        <form.Field
+          name="name"
+          validators={{
+            onChange: ({ value }) => (!value ? 'Required' : undefined),
+          }}
+        >
           {(field) => {
             const error = field.state.meta.errors[0]
             return (
@@ -90,7 +100,12 @@ function SignupPage() {
           }}
         </form.Field>
 
-        <form.Field name="email">
+        <form.Field
+          name="email"
+          validators={{
+            onChange: ({ value }) => (!value ? 'Required' : undefined),
+          }}
+        >
           {(field) => {
             const error = field.state.meta.errors[0]
             return (
@@ -109,7 +124,12 @@ function SignupPage() {
           }}
         </form.Field>
 
-        <form.Field name="password">
+        <form.Field
+          name="password"
+          validators={{
+            onChange: ({ value }) => (!value ? 'Required' : undefined),
+          }}
+        >
           {(field) => {
             const error = field.state.meta.errors[0]
             return (
@@ -128,7 +148,17 @@ function SignupPage() {
           }}
         </form.Field>
 
-        <form.Field name="confirmPassword">
+        <form.Field
+          name="confirmPassword"
+          validators={{
+            onChange: ({ value, fieldApi }) => {
+              if (!value) return 'Required'
+              const password = fieldApi.form.getFieldValue('password')
+              if (value && password !== value) return 'Passwords do not match'
+              return undefined
+            },
+          }}
+        >
           {(field) => {
             const error = field.state.meta.errors[0]
             return (
@@ -147,8 +177,6 @@ function SignupPage() {
           }}
         </form.Field>
 
-        {formError && <p className="mt-4 text-sm text-destructive">{formError}</p>}
-
         <div className="mt-4 space-y-3">
           <Button type="submit" variant="primary" className="w-full">
             Create account
@@ -158,7 +186,7 @@ function SignupPage() {
             <span className="text-sm text-foreground-secondary">Already have an account? </span>
             <button
               onClick={() => navigate({ to: '/login' })}
-              className="text-sm text-foreground-secondary hover:text-foreground transition-colors font-medium"
+              className="text-sm text-foreground-secondary hover:text-foreground transition-colors font-medium cursor-pointer"
               type="button"
             >
               Sign in

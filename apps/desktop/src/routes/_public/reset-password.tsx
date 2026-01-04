@@ -32,25 +32,8 @@ function ResetPasswordPage() {
       newPassword: '',
       confirmNewPassword: '',
     },
-    validators: {
-      onChange: ({ value }) => {
-        if (value.newPassword !== value.confirmNewPassword) {
-          return {
-            fields: {
-              confirmNewPassword: 'Passwords do not match',
-            },
-          }
-        }
-        return undefined
-      },
-    },
     onSubmit: async ({ value }) => {
       setFormError('')
-
-      if (value.newPassword.length < 1) {
-        setFormError('Password is required')
-        return
-      }
 
       setIsResetting(true)
 
@@ -97,6 +80,7 @@ function ResetPasswordPage() {
   const handleVerifyOtp = async (otp: string) => {
     setVerifiedOtp(otp)
     setMode('password')
+    return
   }
 
   const handleResendOtp = async () => {
@@ -110,7 +94,7 @@ function ResetPasswordPage() {
     return (
       <OtpVerificationScreen
         email={email}
-        description="Reset code sent to"
+        description="Please enter the 6 digit code sent to"
         onVerify={handleVerifyOtp}
         onResend={handleResendOtp}
         onBack={() => {
@@ -130,13 +114,35 @@ function ResetPasswordPage() {
           form.handleSubmit()
         }}
         noValidate
-        className="bg-white rounded-lg border border-border shadow-[var(--card-shadow)] p-8"
+        className="bg-white rounded-lg border border-border shadow-card px-8 pt-8 pb-3"
       >
         <div className="text-center mb-6">
           <h2 className="text-xl font-semibold text-foreground">Set new password</h2>
         </div>
 
-        <form.Field name="newPassword">
+        {formError && (
+          <div className="mb-4 p-3 bg-destructive/10 border border-destructive/50 rounded-md flex items-start gap-2">
+            <svg
+              className="w-4 h-4 text-destructive flex-shrink-0 mt-0.5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+            <p className="text-sm text-destructive">{formError}</p>
+          </div>
+        )}
+
+        <form.Field
+          name="newPassword"
+          validators={{
+            onChange: ({ value }) => (!value ? 'Required' : undefined),
+          }}
+        >
           {(field) => (
             <Input
               label="New password"
@@ -150,7 +156,17 @@ function ResetPasswordPage() {
           )}
         </form.Field>
 
-        <form.Field name="confirmNewPassword">
+        <form.Field
+          name="confirmNewPassword"
+          validators={{
+            onChange: ({ value, fieldApi }) => {
+              if (!value) return 'Required'
+              const newPassword = fieldApi.form.getFieldValue('newPassword')
+              if (value && newPassword !== value) return 'Passwords do not match'
+              return undefined
+            },
+          }}
+        >
           {(field) => (
             <Input
               label="Confirm password"
@@ -163,8 +179,6 @@ function ResetPasswordPage() {
           )}
         </form.Field>
 
-        {formError && <p className="mt-4 text-sm text-destructive">{formError}</p>}
-
         <div className="mt-6 space-y-3">
           <Button type="submit" variant="primary" disabled={isResetting} className="w-full">
             {isResetting ? 'Resetting...' : 'Reset password'}
@@ -176,7 +190,7 @@ function ResetPasswordPage() {
                 setMode('otp')
                 form.reset()
               }}
-              className="text-sm text-foreground-secondary hover:text-foreground transition-colors"
+              className="text-sm text-foreground-secondary hover:text-foreground transition-colors cursor-pointer"
               type="button"
             >
               ← Back

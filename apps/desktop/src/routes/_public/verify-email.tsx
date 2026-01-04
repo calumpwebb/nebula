@@ -43,6 +43,8 @@ function VerifyEmailPage() {
       }
     }
 
+    // verifyEmail should create a session, navigate to dashboard
+    // If session isn't created, _public layout will redirect to login
     navigate({ to: '/' })
     return undefined
   }

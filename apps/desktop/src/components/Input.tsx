@@ -34,18 +34,7 @@ export function Input({
         <label htmlFor={id} className="block text-sm font-medium text-foreground">
           {label}
         </label>
-        {hint &&
-          (isHintClickable ? (
-            <button
-              type="button"
-              onClick={onHintClick}
-              className="text-sm text-foreground-secondary hover:text-foreground transition-colors"
-            >
-              {hint}
-            </button>
-          ) : (
-            <span className="text-sm text-foreground-secondary">{hint}</span>
-          ))}
+        {error && <p className="text-sm text-destructive">{error}</p>}
       </div>
       <input
         type={type}
@@ -68,7 +57,18 @@ export function Input({
           placeholder:text-foreground-tertiary
         `}
       />
-      {error && <p className="mt-1.5 text-sm text-destructive">{error}</p>}
+      {hint &&
+        (isHintClickable ? (
+          <button
+            type="button"
+            onClick={onHintClick}
+            className="mt-1.5 text-sm text-foreground-secondary hover:text-foreground transition-colors block ml-auto cursor-pointer"
+          >
+            {hint}
+          </button>
+        ) : (
+          <p className="mt-1.5 text-sm text-foreground-secondary text-right">{hint}</p>
+        ))}
     </div>
   )
 }

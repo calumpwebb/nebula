@@ -12,6 +12,9 @@ function Dashboard() {
   const handleSignOut = async () => {
     try {
       await authClient.signOut()
+      // Clear any stored session data
+      localStorage.clear()
+      sessionStorage.clear()
       router.invalidate()
       router.navigate({ to: '/login' })
     } catch (error) {
@@ -21,7 +24,7 @@ function Dashboard() {
 
   return (
     <div className="flex-1 flex items-center justify-center bg-background p-8">
-      <div className="bg-white rounded-lg shadow-[var(--card-shadow)] p-8 max-w-md w-full text-center">
+      <div className="bg-white rounded-lg shadow-card p-8 max-w-md w-full text-center">
         <h1 className="text-2xl font-semibold text-foreground mb-2">Welcome to Nebula</h1>
         <p className="text-foreground-secondary mb-6">{session?.user?.email}</p>
         <button

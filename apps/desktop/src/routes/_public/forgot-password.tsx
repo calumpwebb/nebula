@@ -44,11 +44,28 @@ function ForgotPasswordPage() {
         }}
         noValidate
         autoComplete="on"
-        className="bg-white rounded-lg border border-border shadow-[var(--card-shadow)] p-8"
+        className="bg-white rounded-lg border border-border shadow-card px-8 pt-8 pb-3"
       >
         <div className="text-center mb-6">
           <h2 className="text-xl font-semibold text-foreground">Reset password</h2>
         </div>
+
+        {formError && (
+          <div className="mb-4 p-3 bg-destructive/10 border border-destructive/50 rounded-md flex items-start gap-2">
+            <svg
+              className="w-4 h-4 text-destructive flex-shrink-0 mt-0.5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <circle cx="12" cy="12" r="10" />
+              <line x1="12" y1="8" x2="12" y2="12" />
+              <line x1="12" y1="16" x2="12.01" y2="16" />
+            </svg>
+            <p className="text-sm text-destructive">{formError}</p>
+          </div>
+        )}
 
         <form.Field name="email">
           {(field) => (
@@ -66,8 +83,6 @@ function ForgotPasswordPage() {
           )}
         </form.Field>
 
-        {formError && <p className="mt-4 text-sm text-destructive">{formError}</p>}
-
         <div className="mt-6 space-y-3">
           <Button type="submit" variant="primary" className="w-full">
             Send reset code
@@ -76,7 +91,7 @@ function ForgotPasswordPage() {
           <div className="text-center">
             <button
               onClick={() => navigate({ to: '/login' })}
-              className="text-sm text-foreground-secondary hover:text-foreground transition-colors"
+              className="text-sm text-foreground-secondary hover:text-foreground transition-colors cursor-pointer"
               type="button"
             >
               ← Back to sign in
