@@ -9,11 +9,8 @@
     <title>Nebula</title>
   </head>
 
-  <body>
-    <div id="root">
-      <!-- Visible until React hydrates - helps debug black screen -->
-      <div id="loading" style="color:#666;padding:2rem;font-family:monospace;">Loading...</div>
-    </div>
+  <body style="background-color: hsl(0, 0%, 99%); margin: 0;">
+    <div id="root"></div>
     <!-- Debug: runs immediately before any modules load -->
     <script>
       console.log('[html] Page loaded');
