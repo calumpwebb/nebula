@@ -41,10 +41,6 @@ try {
 function App() {
   const { data: session, isPending } = authClient.useSession()
 
-  console.log('[App] isPending:', isPending)
-  console.log('[App] session:', session)
-  console.log('[App] isAuthenticated:', !!session?.user)
-
   // Show blank screen while auth state is being determined
   if (isPending) {
     return <div className="h-screen bg-background" />
