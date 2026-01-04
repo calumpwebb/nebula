@@ -2,16 +2,14 @@ import { createFileRoute, Outlet, redirect } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_public')({
   beforeLoad: async ({ context }) => {
-    console.log('[_public guard] isLoading:', context.auth.isLoading)
     console.log('[_public guard] isAuthenticated:', context.auth.isAuthenticated)
 
-    // Only redirect to dashboard if definitely authenticated (not loading)
-    if (!context.auth.isLoading && context.auth.isAuthenticated) {
+    if (context.auth.isAuthenticated) {
       console.log('[_public guard] Authenticated, redirecting to dashboard')
       throw redirect({ to: '/' })
     }
 
-    console.log('[_public guard] Not authenticated or still loading, showing public page')
+    console.log('[_public guard] Not authenticated, showing public page')
   },
   component: PublicLayout,
 })

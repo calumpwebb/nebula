@@ -1,11 +1,10 @@
-import { createRouter } from "@tanstack/react-router";
-import { routeTree } from "./routeTree.gen";
+import { createRouter } from '@tanstack/react-router'
+import { routeTree } from './routeTree.gen'
 
 export interface RouterContext {
   auth: {
-    isAuthenticated: boolean;
-    isLoading: boolean;
-  };
+    isAuthenticated: boolean
+  }
 }
 
 export const router = createRouter({
@@ -13,10 +12,10 @@ export const router = createRouter({
   context: {
     auth: undefined!,
   },
-});
+})
 
-declare module "@tanstack/react-router" {
+declare module '@tanstack/react-router' {
   interface Register {
-    router: typeof router;
+    router: typeof router
   }
 }

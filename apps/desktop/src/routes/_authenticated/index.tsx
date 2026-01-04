@@ -1,5 +1,4 @@
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { useEffect } from 'react'
+import { createFileRoute } from '@tanstack/react-router'
 import { authClient } from '../../lib/auth-client'
 
 export const Route = createFileRoute('/_authenticated/')({
@@ -7,20 +6,11 @@ export const Route = createFileRoute('/_authenticated/')({
 })
 
 function Dashboard() {
-  const { data: session, isPending } = authClient.useSession()
-  const navigate = useNavigate()
+  const { data: session } = authClient.useSession()
 
   console.log('[Dashboard] Session:', session)
   console.log('[Dashboard] User:', session?.user)
   console.log('[Dashboard] Email:', session?.user?.email)
-
-  // Redirect to login if session loading finished and no session exists
-  useEffect(() => {
-    if (!isPending && !session?.user) {
-      console.log('[Dashboard] No session after loading, redirecting to login')
-      navigate({ to: '/login' })
-    }
-  }, [isPending, session, navigate])
 
   const handleSignOut = async () => {
     try {

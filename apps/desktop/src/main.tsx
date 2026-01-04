@@ -45,13 +45,17 @@ function App() {
   console.log('[App] session:', session)
   console.log('[App] isAuthenticated:', !!session?.user)
 
+  // Show blank screen while auth state is being determined
+  if (isPending) {
+    return <div className="h-screen bg-background" />
+  }
+
   return (
     <RouterProvider
       router={router}
       context={{
         auth: {
           isAuthenticated: !!session?.user,
-          isLoading: isPending,
         },
       }}
     />
