@@ -20,9 +20,6 @@ function ForgotPasswordPage() {
     onSubmit: async ({ value }) => {
       setFormError('')
 
-      // Temporary delay for testing loading states
-      await new Promise((resolve) => setTimeout(resolve, 2000))
-
       try {
         await authClient.emailOtp.sendVerificationOtp({
           email: value.email,

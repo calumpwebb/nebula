@@ -28,9 +28,6 @@ function LoginPage() {
     onSubmit: async ({ value }) => {
       setFormError('')
 
-      // Temporary delay for testing loading states
-      await new Promise((resolve) => setTimeout(resolve, 2000))
-
       const result = await authClient.signIn.email({
         email: value.email,
         password: value.password,
