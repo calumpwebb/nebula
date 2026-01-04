@@ -47,7 +47,7 @@ function ForgotPasswordPage() {
         }}
         noValidate
         autoComplete="on"
-        className="bg-white rounded-lg border border-border shadow-card px-8 pt-4 pb-3"
+        className="bg-white rounded-lg border border-border shadow-card px-8 pt-8 pb-3"
       >
         <div className="text-center mb-6">
           <h2 className="text-2xl font-semibold text-foreground">Reset password</h2>
@@ -70,7 +70,12 @@ function ForgotPasswordPage() {
           </div>
         )}
 
-        <form.Field name="email">
+        <form.Field
+          name="email"
+          validators={{
+            onChange: ({ value }) => (!value ? 'Required' : undefined),
+          }}
+        >
           {(field) => (
             <Input
               label="Email"
