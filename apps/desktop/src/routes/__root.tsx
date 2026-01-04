@@ -1,9 +1,11 @@
 import { createRootRouteWithContext, Outlet } from '@tanstack/react-router'
 import { getCurrentWindow } from '@tauri-apps/api/window'
 import type { RouterContext } from '../router'
+import { NotFound } from '../components/NotFound'
 
 export const Route = createRootRouteWithContext<RouterContext>()({
   component: RootLayout,
+  notFoundComponent: NotFound,
 })
 
 function RootLayout() {
