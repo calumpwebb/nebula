@@ -86,9 +86,21 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/forgot-password' | '/login' | '/reset-password' | '/signup' | '/verify-email' | '/'
+  fullPaths:
+    | '/forgot-password'
+    | '/login'
+    | '/reset-password'
+    | '/signup'
+    | '/verify-email'
+    | '/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/forgot-password' | '/login' | '/reset-password' | '/signup' | '/verify-email' | '/'
+  to:
+    | '/forgot-password'
+    | '/login'
+    | '/reset-password'
+    | '/signup'
+    | '/verify-email'
+    | '/'
   id:
     | '__root__'
     | '/_authenticated'
@@ -176,7 +188,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
-  AuthenticatedRouteChildren
+  AuthenticatedRouteChildren,
 )
 
 interface PublicRouteChildren {
@@ -195,7 +207,8 @@ const PublicRouteChildren: PublicRouteChildren = {
   PublicVerifyEmailRoute: PublicVerifyEmailRoute,
 }
 
-const PublicRouteWithChildren = PublicRoute._addFileChildren(PublicRouteChildren)
+const PublicRouteWithChildren =
+  PublicRoute._addFileChildren(PublicRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRoute: AuthenticatedRouteWithChildren,
