@@ -14,33 +14,26 @@ interface ToastProps {
   onDismiss: (id: string) => void
 }
 
-const typeStyles: Record<
-  ToastType,
-  { border: string; labelText: string; messageText: string; label: string }
-> = {
+const typeStyles: Record<ToastType, { bg: string; text: string; label: string }> = {
   error: {
-    border: 'border-red-500',
-    labelText: 'text-red-400',
-    messageText: 'text-red-300',
-    label: 'error',
+    bg: 'bg-destructive',
+    text: 'text-destructive-foreground',
+    label: 'Error',
   },
   warning: {
-    border: 'border-yellow-500',
-    labelText: 'text-yellow-400',
-    messageText: 'text-yellow-300',
-    label: 'warning',
+    bg: 'bg-warning',
+    text: 'text-warning-foreground',
+    label: 'Warning',
   },
   success: {
-    border: 'border-green-500',
-    labelText: 'text-green-400',
-    messageText: 'text-green-300',
-    label: 'success',
+    bg: 'bg-success',
+    text: 'text-success-foreground',
+    label: 'Success',
   },
   info: {
-    border: 'border-gray-500',
-    labelText: 'text-gray-300',
-    messageText: 'text-gray-400',
-    label: 'info',
+    bg: 'bg-info',
+    text: 'text-info-foreground',
+    label: 'Info',
   },
 }
 
@@ -71,22 +64,36 @@ export function Toast({ toast, onDismiss }: ToastProps) {
   return (
     <div
       className={`
-        flex items-center gap-2 px-3 py-2 border bg-black
-        font-mono text-sm select-none
+        flex items-center gap-3 px-4 py-3 rounded-md shadow-lg
+        font-sans text-sm select-none
         transition-all duration-200 ease-out
-        ${styles.border}
-        ${isExiting ? 'opacity-0 -translate-y-2' : 'opacity-100 translate-y-0'}
+        ${styles.bg} ${styles.text}
+        ${isExiting ? 'opacity-0 translate-y-2 scale-95' : 'opacity-100 translate-y-0 scale-100'}
       `}
     >
-      <div className="flex-1">
-        <span className={`${styles.labelText} font-bold`}>{styles.label}: </span>
-        <span className={styles.messageText}>{toast.message}</span>
+      <div className="flex-1 flex items-center gap-2">
+        <span className="font-semibold">{styles.label}</span>
+        <span>{toast.message}</span>
       </div>
       <button
         onClick={handleDismiss}
-        className="text-gray-600 hover:text-gray-400 transition-colors"
+        className="opacity-70 hover:opacity-100 transition-opacity"
+        aria-label="Dismiss"
       >
-        [x]
+        <svg
+          width="14"
+          height="14"
+          viewBox="0 0 14 14"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M1 1L13 13M13 1L1 13"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+        </svg>
       </button>
     </div>
   )

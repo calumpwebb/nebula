@@ -2,9 +2,8 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useState, useEffect } from 'react'
 import { authClient } from '../../lib/auth-client'
 import { useToast } from '../../components/Toast'
-import { TerminalInput } from '../../components/TerminalInput'
-import { NebulaLogo } from '../../components/NebulaLogo'
-import { TerminalButton } from '../../components/TerminalButton'
+import { Input } from '../../components/Input'
+import { Button } from '../../components/Button'
 import { OtpVerificationScreen } from '../../components/OtpVerificationScreen'
 
 export const Route = createFileRoute('/_public/login')({
@@ -129,12 +128,9 @@ function LoginPage() {
         email,
         type: 'forget-password',
       })
-      // Always show success (security - don't reveal if account exists)
-      toast.success('if this email exists, we sent a reset code')
       setMode('forgot-password-otp')
     } catch {
-      // Still show success message for security
-      toast.success('if this email exists, we sent a reset code')
+      // Don't show error for security - proceed to OTP screen
       setMode('forgot-password-otp')
     }
   }
@@ -233,7 +229,7 @@ function LoginPage() {
     return (
       <OtpVerificationScreen
         email={email}
-        description="verification code sent to"
+        description="Verification code sent to"
         onVerify={handleVerifyEmail}
         onResend={handleResendVerification}
         onBack={() => setMode('sign-in')}
@@ -245,35 +241,42 @@ function LoginPage() {
   // Forgot password - email entry
   if (mode === 'forgot-password-email') {
     return (
-      <div className="text-sm w-[380px]">
-        <form onSubmit={handleForgotPasswordSubmit} noValidate autoComplete="on" className="p-6">
-          <div className="flex justify-center mb-6">
-            <NebulaLogo />
+      <div className="w-full max-w-md">
+        <form
+          onSubmit={handleForgotPasswordSubmit}
+          noValidate
+          autoComplete="on"
+          className="bg-white rounded-lg shadow-[var(--card-shadow)] p-8"
+        >
+          <div className="text-center mb-6">
+            <h2 className="text-xl font-semibold text-foreground">Reset password</h2>
           </div>
 
-          <div className="text-white mb-4">
-            <span className="text-gray-400">// </span>
-            enter your email to receive a reset code
-          </div>
-
-          <TerminalInput
-            label="email"
+          <Input
+            label="Email"
             value={email}
             onChange={setEmail}
             autoFocus
             autoComplete="username"
             name="email"
             id="email"
+            placeholder="you@example.com"
           />
 
-          <div className="mt-4 space-y-2">
-            <TerminalButton type="submit" variant="primary">
-              [ send reset code ]
-            </TerminalButton>
+          <div className="mt-6 space-y-3">
+            <Button type="submit" variant="primary" className="w-full">
+              Send reset code
+            </Button>
 
-            <TerminalButton onClick={() => setMode('sign-in')} variant="link">
-              {'<'} back to sign in
-            </TerminalButton>
+            <div className="text-center pt-2">
+              <button
+                onClick={() => setMode('sign-in')}
+                className="text-sm text-foreground-secondary hover:text-foreground transition-colors"
+                type="button"
+              >
+                ← Back to sign in
+              </button>
+            </div>
           </div>
         </form>
       </div>
@@ -285,7 +288,7 @@ function LoginPage() {
     return (
       <OtpVerificationScreen
         email={email}
-        description="reset code sent to"
+        description="Reset code sent to"
         onVerify={handleVerifyResetCode}
         onResend={handleResendResetCode}
         onBack={() => {
@@ -293,7 +296,7 @@ function LoginPage() {
           setVerifiedOtp('')
         }}
         isVerifying={false}
-        verifyButtonText="[ verify code ]"
+        verifyButtonText="Verify code"
       />
     )
   }
@@ -301,47 +304,51 @@ function LoginPage() {
   // Forgot password - new password entry
   if (mode === 'forgot-password-reset') {
     return (
-      <div className="text-sm w-[380px]">
-        <form onSubmit={handleResetPassword} noValidate className="p-6">
-          <div className="flex justify-center mb-6">
-            <NebulaLogo />
+      <div className="w-full max-w-md">
+        <form
+          onSubmit={handleResetPassword}
+          noValidate
+          className="bg-white rounded-lg shadow-[var(--card-shadow)] p-8"
+        >
+          <div className="text-center mb-6">
+            <h2 className="text-xl font-semibold text-foreground">Set new password</h2>
           </div>
 
-          <div className="text-white mb-4">
-            <span className="text-gray-400">// </span>
-            create your new password
-          </div>
-
-          <TerminalInput
-            label="password"
+          <Input
+            label="New password"
             type="password"
             value={newPassword}
             onChange={setNewPassword}
             autoFocus
+            placeholder="••••••••"
           />
 
-          <TerminalInput
-            label="confirm"
+          <Input
+            label="Confirm password"
             type="password"
             value={confirmNewPassword}
             onChange={setConfirmNewPassword}
+            placeholder="••••••••"
           />
 
-          <div className="mt-4 space-y-2">
-            <TerminalButton type="submit" variant="primary" disabled={isVerifying}>
-              {isVerifying ? '[ resetting... ]' : '[ reset password ]'}
-            </TerminalButton>
+          <div className="mt-6 space-y-3">
+            <Button type="submit" variant="primary" disabled={isVerifying} className="w-full">
+              {isVerifying ? 'Resetting...' : 'Reset password'}
+            </Button>
 
-            <TerminalButton
-              onClick={() => {
-                setMode('forgot-password-otp')
-                setNewPassword('')
-                setConfirmNewPassword('')
-              }}
-              variant="link"
-            >
-              {'<'} back
-            </TerminalButton>
+            <div className="text-center pt-2">
+              <button
+                onClick={() => {
+                  setMode('forgot-password-otp')
+                  setNewPassword('')
+                  setConfirmNewPassword('')
+                }}
+                className="text-sm text-foreground-secondary hover:text-foreground transition-colors"
+                type="button"
+              >
+                ← Back
+              </button>
+            </div>
           </div>
         </form>
       </div>
@@ -350,85 +357,98 @@ function LoginPage() {
 
   // Sign-in / Sign-up form
   return (
-    <div className="text-sm w-[380px]">
-      <form onSubmit={handleSubmit} noValidate autoComplete="on" className="p-6">
-        <div className="flex justify-center mb-6">
-          <NebulaLogo />
-        </div>
-
-        <div className="text-white mb-4 flex justify-between items-center">
-          <div>
-            <span className="text-primary">$ </span>
-            {mode === 'sign-up' ? 'create_account' : 'sign_in'}
-          </div>
-          {mode === 'sign-in' && (
-            <button
-              type="button"
-              onClick={() => setMode('forgot-password-email')}
-              className="text-xs text-gray-500 hover:text-gray-400 transition-colors"
-            >
-              forgot password?
-            </button>
-          )}
+    <div className="w-full max-w-md">
+      <form
+        onSubmit={handleSubmit}
+        noValidate
+        autoComplete="on"
+        className="bg-white rounded-lg shadow-[var(--card-shadow)] p-8"
+      >
+        <div className="text-center mb-6">
+          <h2 className="text-xl font-semibold text-foreground">
+            {mode === 'sign-up' ? 'Create account' : 'Sign in'}
+          </h2>
         </div>
 
         {mode === 'sign-up' && (
-          <TerminalInput
-            label="name"
+          <Input
+            label="Name"
             value={name}
             onChange={setName}
             autoComplete="name"
             name="name"
             id="name"
+            placeholder="Your name"
           />
         )}
 
-        <TerminalInput
-          label="email"
+        <Input
+          label="Email"
           value={email}
           onChange={setEmail}
           autoFocus
           autoComplete="username"
           name="email"
           id="email"
+          placeholder="you@example.com"
         />
 
-        <TerminalInput
-          label="password"
+        <Input
+          label="Password"
           type="password"
           value={password}
           onChange={setPassword}
           autoComplete={mode === 'sign-up' ? 'new-password' : 'current-password'}
           name="password"
           id="password"
+          placeholder="••••••••"
         />
 
         {mode === 'sign-up' && (
-          <TerminalInput
-            label="confirm"
+          <Input
+            label="Confirm password"
             type="password"
             value={confirmPassword}
             onChange={setConfirmPassword}
             autoComplete="new-password"
             name="confirmPassword"
             id="confirmPassword"
+            placeholder="••••••••"
           />
         )}
 
-        <div className="mt-4 space-y-2">
-          <TerminalButton type="submit" variant="primary">
-            {mode === 'sign-up' ? '[ create account ]' : '[ sign in ]'}
-          </TerminalButton>
+        {mode === 'sign-in' && (
+          <div className="text-right mb-2">
+            <button
+              type="button"
+              onClick={() => setMode('forgot-password-email')}
+              className="text-sm text-foreground-secondary hover:text-foreground transition-colors"
+            >
+              Forgot password?
+            </button>
+          </div>
+        )}
 
-          <TerminalButton
-            onClick={() => {
-              setMode(mode === 'sign-up' ? 'sign-in' : 'sign-up')
-              setConfirmPassword('')
-            }}
-            variant="link"
-          >
-            {mode === 'sign-up' ? '< already have account' : '> create new account'}
-          </TerminalButton>
+        <div className="mt-4 space-y-3">
+          <Button type="submit" variant="primary" className="w-full">
+            {mode === 'sign-up' ? 'Create account' : 'Sign in'}
+          </Button>
+
+          <div className="text-center pt-2">
+            <span className="text-sm text-foreground-secondary">
+              {mode === 'sign-up' ? 'Already have an account?' : "Don't have an account?"}{' '}
+            </span>
+            <button
+              onClick={() => {
+                setMode(mode === 'sign-up' ? 'sign-in' : 'sign-up')
+                setConfirmPassword('')
+              }}
+              className="text-sm text-foreground-secondary hover:text-foreground transition-colors font-medium"
+              type="button"
+            >
+              {mode === 'sign-up' ? 'Sign in' : 'Sign up'}
+            </button>
+          </div>
         </div>
       </form>
     </div>

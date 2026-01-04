@@ -5,24 +5,52 @@ export default {
     extend: {
       colors: {
         background: 'hsl(var(--background))',
-        foreground: 'hsl(var(--foreground))',
+        surface: {
+          DEFAULT: 'hsl(var(--surface))',
+          hover: 'hsl(var(--surface-hover))',
+        },
+        foreground: {
+          DEFAULT: 'hsl(var(--foreground))',
+          secondary: 'hsl(var(--foreground-secondary))',
+          tertiary: 'hsl(var(--foreground-tertiary))',
+        },
         primary: {
           DEFAULT: 'hsl(var(--primary))',
+          hover: 'hsl(var(--primary-hover))',
           foreground: 'hsl(var(--primary-foreground))',
         },
         secondary: {
           DEFAULT: 'hsl(var(--secondary))',
+          hover: 'hsl(var(--secondary-hover))',
           foreground: 'hsl(var(--secondary-foreground))',
-        },
-        muted: {
-          DEFAULT: 'hsl(var(--muted))',
-          foreground: 'hsl(var(--muted-foreground))',
         },
         accent: {
           DEFAULT: 'hsl(var(--accent))',
+          hover: 'hsl(var(--accent-hover))',
           foreground: 'hsl(var(--accent-foreground))',
         },
-        border: 'hsl(var(--border))',
+        success: {
+          DEFAULT: 'hsl(var(--success))',
+          foreground: 'hsl(var(--success-foreground))',
+        },
+        warning: {
+          DEFAULT: 'hsl(var(--warning))',
+          foreground: 'hsl(var(--warning-foreground))',
+        },
+        destructive: {
+          DEFAULT: 'hsl(var(--destructive))',
+          foreground: 'hsl(var(--destructive-foreground))',
+        },
+        info: {
+          DEFAULT: 'hsl(var(--info))',
+          foreground: 'hsl(var(--info-foreground))',
+        },
+        border: {
+          DEFAULT: 'hsl(var(--border))',
+          hover: 'hsl(var(--border-hover))',
+        },
+        input: 'hsl(var(--input))',
+        ring: 'hsl(var(--ring))',
       },
       fontFamily: {
         sans: ['Geist', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'sans-serif'],

@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
-import { TerminalButton } from './TerminalButton'
-import { NebulaLogo } from './NebulaLogo'
+import { Button } from './Button'
 
 type OtpVerificationScreenProps = {
   email: string
@@ -20,8 +19,8 @@ export function OtpVerificationScreen({
   onResend,
   onBack,
   isVerifying,
-  verifyButtonText = '[ verify ]',
-  verifyingButtonText = '[ verifying... ]',
+  verifyButtonText = 'Verify',
+  verifyingButtonText = 'Verifying...',
 }: OtpVerificationScreenProps) {
   const [otp, setOtp] = useState('')
   const [countdown, setCountdown] = useState(30)
@@ -43,49 +42,61 @@ export function OtpVerificationScreen({
   }
 
   return (
-    <div className="text-sm w-[380px]">
-      <div className="p-6">
-        <div className="flex justify-center mb-6">
-          <NebulaLogo />
+    <div className="w-full max-w-md">
+      <div className="bg-white rounded-lg shadow-[var(--card-shadow)] p-8">
+        <div className="text-center mb-6">
+          <h2 className="text-xl font-semibold text-foreground mb-2">Enter verification code</h2>
+          <p className="text-sm text-foreground-secondary">
+            {description} <span className="font-medium">{email}</span>
+          </p>
         </div>
 
-        <div className="text-white mb-4">
-          <span className="text-gray-400">// </span>
-          {description} {email}
-        </div>
-
-        <div className="flex items-center gap-2 mb-4">
-          <span className="text-white font-bold">code:</span>
+        <div className="mb-6">
+          <label htmlFor="otp" className="block text-sm font-medium text-foreground mb-2">
+            Verification code
+          </label>
           <input
+            id="otp"
             type="text"
             value={otp}
             onChange={(e) => {
               const value = e.target.value.replace(/\D/g, '').slice(0, 6)
               setOtp(value)
             }}
-            placeholder="______"
+            placeholder="000000"
             maxLength={6}
             autoFocus
-            className="flex-1 bg-transparent border-none outline-none text-gray-200 tracking-widest placeholder:text-gray-700"
+            className="w-full px-4 py-3 text-center text-2xl tracking-wider bg-background border border-input rounded-md transition-colors focus:outline-none focus:border-input-focus focus:ring-1 focus:ring-ring font-mono"
           />
         </div>
 
-        <div className="space-y-2">
-          <TerminalButton
+        <div className="space-y-3">
+          <Button
             onClick={() => onVerify(otp)}
             disabled={otp.length !== 6 || isVerifying}
             variant="primary"
+            className="w-full"
           >
             {isVerifying ? verifyingButtonText : verifyButtonText}
-          </TerminalButton>
+          </Button>
 
-          <TerminalButton onClick={handleResend} disabled={countdown > 0} variant="secondary">
-            {countdown > 0 ? `[ resend in ${countdown}s ]` : '[ resend code ]'}
-          </TerminalButton>
+          <Button
+            onClick={handleResend}
+            disabled={countdown > 0}
+            variant="secondary"
+            className="w-full"
+          >
+            {countdown > 0 ? `Resend in ${countdown}s` : 'Resend code'}
+          </Button>
 
-          <TerminalButton onClick={onBack} variant="link">
-            {'<'} back
-          </TerminalButton>
+          <div className="text-center pt-2">
+            <button
+              onClick={onBack}
+              className="text-sm text-foreground-secondary hover:text-foreground transition-colors"
+            >
+              ← Back
+            </button>
+          </div>
         </div>
       </div>
     </div>

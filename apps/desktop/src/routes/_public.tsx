@@ -12,7 +12,7 @@ export const Route = createFileRoute('/_public')({
 
 function PublicLayout() {
   return (
-    <div className="flex-1 flex flex-col items-center justify-center font-mono">
+    <div className="flex-1 flex flex-col items-center justify-center bg-background p-4">
       <Outlet />
     </div>
   )

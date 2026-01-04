@@ -18,32 +18,61 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ---- Theme Configuration ---- */
+/* Apple-inspired modern SaaS color system */
 :root {
-  /* ---- Base Colors ---- */
-  --background: 0 0% 0%;
-  --foreground: 0 0% 95%;
+  /* ---- Backgrounds ---- */
+  --background: 0 0% 100%;           /* Pure white */
+  --surface: 0 0% 98%;               /* Subtle off-white for cards/panels */
+  --surface-hover: 0 0% 96%;         /* Hover state for interactive surfaces */
 
-  /* ---- Primary (Bright Purple) ---- */
-  --primary: 270 100% 70%;
-  --primary-foreground: 0 0% 100%;
+  /* ---- Text ---- */
+  --foreground: 0 0% 9%;             /* Near-black for primary text */
+  --foreground-secondary: 0 0% 45%;  /* Gray for secondary text */
+  --foreground-tertiary: 0 0% 62%;   /* Lighter gray for tertiary text */
+
+  /* ---- Primary (Black) ---- */
+  --primary: 0 0% 0%;                /* Pure black for primary buttons/CTAs */
+  --primary-hover: 0 0% 15%;         /* Lighter gray on hover */
+  --primary-foreground: 0 0% 100%;   /* White text on black */
 
   /* ---- Secondary ---- */
-  --secondary: 0 0% 10%;
-  --secondary-foreground: 0 0% 95%;
+  --secondary: 0 0% 100%;            /* White background */
+  --secondary-hover: 0 0% 98%;       /* Very subtle gray on hover */
+  --secondary-foreground: 0 0% 9%;   /* Black text */
 
-  /* ---- Muted ---- */
-  --muted: 0 0% 8%;
-  --muted-foreground: 0 0% 60%;
+  /* ---- Accent (Blue) ---- */
+  --accent: 211 100% 55%;            /* Vibrant blue for links/accents */
+  --accent-hover: 211 100% 48%;      /* Darker on hover */
+  --accent-foreground: 0 0% 100%;    /* White text on blue */
 
-  /* ---- Accent ---- */
-  --accent: 0 0% 12%;
-  --accent-foreground: 0 0% 95%;
+  /* ---- Borders ---- */
+  --border: 0 0% 90%;                /* Very light gray for borders */
+  --border-hover: 0 0% 80%;          /* Slightly darker on hover */
+
+  /* ---- Input ---- */
+  --input: 0 0% 90%;                 /* Light gray border for inputs */
+  --input-focus: 0 0% 9%;            /* Black border on focus */
+
+  /* ---- Status Colors ---- */
+  --success: 142 76% 48%;            /* Vibrant green */
+  --success-foreground: 0 0% 100%;
+
+  --warning: 35 100% 52%;            /* Vibrant orange */
+  --warning-foreground: 0 0% 100%;
+
+  --destructive: 0 91% 60%;          /* Vibrant red */
+  --destructive-foreground: 0 0% 100%;
+
+  --info: 211 100% 55%;              /* Vibrant blue */
+  --info-foreground: 0 0% 100%;
 
   /* ---- UI Elements ---- */
-  --border: 0 0% 15%;
+  --ring: 0 0% 9%;                   /* Black focus ring */
+  --radius: 0.375rem;                /* 6px - very subtle rounding */
 
-  /* ---- Layout ---- */
-  --radius: 0.5rem;
+  /* ---- Card Shadows ---- */
+  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
 @layer base {
@@ -51,11 +80,43 @@
     @apply border-border;
   }
 
-  body {
-    @apply bg-background text-foreground font-mono;
+  /* Custom focus styles */
+  *:focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+    border-radius: 4px;
   }
 
+  html {
+    background-color: white;
+    overscroll-behavior: none;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+    overscroll-behavior: none;
+  }
+
+  /* Custom scrollbar styling */
+  ::-webkit-scrollbar {
+    @apply w-2 h-2;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-background;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--border));
+    @apply rounded-sm;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--border-hover));
+  }
+
+  /* Selection styling */
   ::selection {
-    @apply bg-primary/20 text-foreground;
+    @apply bg-accent/20 text-foreground;
   }
 }

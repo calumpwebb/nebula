@@ -20,15 +20,15 @@ function Dashboard() {
   }
 
   return (
-    <div className="flex-1 flex items-center justify-center">
-      <div className="text-white text-center">
-        <h1 className="text-2xl mb-4">Welcome to Nebula</h1>
-        <p className="text-neutral-400 mb-4">{session?.user?.email}</p>
+    <div className="flex-1 flex items-center justify-center bg-background p-8">
+      <div className="bg-white rounded-lg shadow-[var(--card-shadow)] p-8 max-w-md w-full text-center">
+        <h1 className="text-2xl font-semibold text-foreground mb-2">Welcome to Nebula</h1>
+        <p className="text-foreground-secondary mb-6">{session?.user?.email}</p>
         <button
           onClick={handleSignOut}
-          className="px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-primary/80"
+          className="px-5 py-2.5 text-sm font-medium rounded-md bg-primary text-primary-foreground hover:bg-primary-hover transition-colors"
         >
-          Sign Out
+          Sign out
         </button>
       </div>
     </div>
