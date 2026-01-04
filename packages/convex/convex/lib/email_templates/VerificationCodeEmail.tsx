@@ -1,4 +1,3 @@
-import * as React from 'react'
 import { Html, Head, Body, Container, Section, Text, Heading } from '@react-email/components'
 import { designTokens } from '@nebula/shared'
 
@@ -8,20 +7,13 @@ interface VerificationCodeEmailProps {
   type: 'sign-in' | 'email-verification' | 'forget-password'
 }
 
-export function VerificationCodeEmail({ email, code, type }: VerificationCodeEmailProps) {
+export function VerificationCodeEmail({ code, type }: VerificationCodeEmailProps) {
   const title =
     type === 'sign-in'
       ? 'Sign in to Nebula'
       : type === 'forget-password'
         ? 'Reset your password'
         : 'Verify your email'
-
-  const description =
-    type === 'sign-in'
-      ? 'Please enter the 6 digit code sent to'
-      : type === 'forget-password'
-        ? 'Please enter the 6 digit code to reset your password for'
-        : 'Please enter the 6 digit code sent to'
 
   return (
     <Html>
@@ -31,9 +23,6 @@ export function VerificationCodeEmail({ email, code, type }: VerificationCodeEma
           <Section style={styles.card}>
             {/* Header */}
             <Heading style={styles.heading}>{title}</Heading>
-            <Text style={styles.description}>
-              {description} <span style={styles.email}>{email}</span>
-            </Text>
 
             {/* Verification Code */}
             <Section style={styles.codeSection}>
@@ -77,20 +66,9 @@ const styles = {
     color: designTokens.colors.foreground,
     fontSize: designTokens.typography.fontSize['2xl'],
     fontWeight: designTokens.typography.fontWeight.semibold,
-    margin: '0 0 12px',
-    textAlign: 'center' as const,
-    lineHeight: designTokens.typography.lineHeight.tight,
-  },
-  description: {
-    color: designTokens.colors.foregroundSecondary,
-    fontSize: designTokens.typography.fontSize.sm,
     margin: '0 0 32px',
     textAlign: 'center' as const,
-    lineHeight: designTokens.typography.lineHeight.normal,
-  },
-  email: {
-    color: designTokens.colors.foreground,
-    fontWeight: designTokens.typography.fontWeight.medium,
+    lineHeight: designTokens.typography.lineHeight.tight,
   },
   codeSection: {
     margin: '0 0 32px',

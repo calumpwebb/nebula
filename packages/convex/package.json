@@ -4,7 +4,10 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./convex/_generated/api.js",
+    ".": {
+      "types": "./convex/_generated/api.d.ts",
+      "default": "./convex/_generated/api.js"
+    },
     "./client": "./client/index.ts",
     "./server": "./convex/middleware/server.ts"
   },
