@@ -82,7 +82,8 @@ function createSVG(dots: Dot[], windowWidth: number, windowHeight: number): stri
 }
 
 // @ts-expect-error - Scaffold: debounce will be used in later implementation
-function debounce<T extends (...args: never[]) => void>(fn: T, delay: number): T {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function debounce<T extends (...args: any[]) => void>(fn: T, delay: number): T {
   let timeoutId: ReturnType<typeof setTimeout> | null = null
   return ((...args: Parameters<T>) => {
     if (timeoutId) clearTimeout(timeoutId)
