@@ -14,10 +14,14 @@ function RootLayout() {
 
   return (
     <ToastProvider>
-      <div className="h-screen flex flex-col bg-black">
+      <div className="h-screen flex flex-col bg-background">
         {/* Draggable Title Bar */}
-        <div onMouseDown={startDrag} className="h-9 flex-shrink-0 select-none cursor-default">
-          <div className="w-[70px] h-full pointer-events-none" />
+        <div
+          onMouseDown={startDrag}
+          className="h-9 flex-shrink-0 select-none cursor-default flex items-center justify-center"
+        >
+          <div className="w-[70px] h-full pointer-events-none absolute left-0" />
+          <span className="text-sm font-medium text-foreground/60">Nebula</span>
         </div>
 
         {/* Route Content */}
