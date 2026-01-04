@@ -8,7 +8,7 @@ import { emailOTP } from 'better-auth/plugins'
 import authConfig from '../../auth.config'
 import { sendEmail } from '../../lib/emails'
 import { render } from '@react-email/render'
-import { VerificationCodeEmail } from '../../lib/email-templates/VerificationCodeEmail'
+import { VerificationCodeEmail } from '../../lib/email_templates/VerificationCodeEmail'
 
 // TODO(NEBULA-uy7): Set SITE_URL env var in production
 const siteUrl = process.env.SITE_URL ?? 'http://localhost:1420'
