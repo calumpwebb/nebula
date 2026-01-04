@@ -7,6 +7,8 @@ import { betterAuth } from 'better-auth/minimal'
 import { emailOTP } from 'better-auth/plugins'
 import authConfig from '../../auth.config'
 import { sendEmail } from '../../lib/emails'
+import { render } from '@react-email/render'
+import { VerificationCodeEmail } from '../../lib/email-templates/VerificationCodeEmail'
 
 // TODO(NEBULA-uy7): Set SITE_URL env var in production
 const siteUrl = process.env.SITE_URL ?? 'http://localhost:1420'
@@ -41,7 +43,7 @@ export const createAuth = (ctx: GenericCtx<DataModel>): ReturnType<typeof better
       convex({ authConfig }),
       emailOTP({
         expiresIn: 600, // 10 minutes
-        sendVerificationOnSignUp: true,
+        sendVerificationOnSignUp: false,
         async sendVerificationOTP({ email, otp, type }) {
           // Enforce 30s cooldown between OTP sends
           const actionCtx = requireActionCtx(ctx)
@@ -63,22 +65,15 @@ export const createAuth = (ctx: GenericCtx<DataModel>): ReturnType<typeof better
                 ? 'Your Nebula password reset code'
                 : 'Verify your Nebula account'
 
-          await sendEmail(
-            email,
-            subject,
-            `
-            <h1 style="font-family: sans-serif; color: #333;">Your verification code</h1>
-            <p style="font-family: sans-serif; font-size: 32px; font-weight: bold; letter-spacing: 4px; color: #2563eb; margin: 24px 0;">
-              ${otp}
-            </p>
-            <p style="font-family: sans-serif; color: #666;">
-              This code expires in 10 minutes.
-            </p>
-            <p style="font-family: sans-serif; color: #999; font-size: 12px;">
-              If you didn't request this code, you can safely ignore this email.
-            </p>
-            `
+          const html = await render(
+            VerificationCodeEmail({
+              email,
+              code: otp,
+              type,
+            })
           )
+
+          await sendEmail(email, subject, html)
         },
       }),
     ],

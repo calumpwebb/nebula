@@ -1,4 +1,5 @@
-import { createFileRoute, useRouter } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { useEffect } from 'react'
 import { authClient } from '../../lib/auth-client'
 
 export const Route = createFileRoute('/_authenticated/')({
@@ -6,19 +7,36 @@ export const Route = createFileRoute('/_authenticated/')({
 })
 
 function Dashboard() {
-  const { data: session } = authClient.useSession()
-  const router = useRouter()
+  const { data: session, isPending } = authClient.useSession()
+  const navigate = useNavigate()
+
+  console.log('[Dashboard] Session:', session)
+  console.log('[Dashboard] User:', session?.user)
+  console.log('[Dashboard] Email:', session?.user?.email)
+
+  // Redirect to login if session loading finished and no session exists
+  useEffect(() => {
+    if (!isPending && !session?.user) {
+      console.log('[Dashboard] No session after loading, redirecting to login')
+      navigate({ to: '/login' })
+    }
+  }, [isPending, session, navigate])
 
   const handleSignOut = async () => {
     try {
-      await authClient.signOut()
+      console.log('[sign-out] Starting sign out...')
+      const result = await authClient.signOut()
+      console.log('[sign-out] Sign out result:', result)
+
       // Clear any stored session data
       localStorage.clear()
       sessionStorage.clear()
-      router.invalidate()
-      router.navigate({ to: '/login' })
+
+      console.log('[sign-out] Reloading to login page...')
+      // Force reload to clear all state
+      window.location.href = '/login'
     } catch (error) {
-      console.error('Sign out failed:', error)
+      console.error('[sign-out] Sign out failed:', error)
     }
   }
 
