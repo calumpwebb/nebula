@@ -48,7 +48,7 @@ export function Input({
         className={`
           w-full px-3.5 py-2.5 text-sm bg-background
           border rounded-md transition-colors
-          focus:outline-none focus:ring-1
+          focus:outline-none focus:ring-1 focus:bg-white
           ${
             hasError
               ? 'border-destructive focus:border-destructive focus:ring-destructive'
