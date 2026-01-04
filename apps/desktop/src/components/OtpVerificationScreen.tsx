@@ -21,6 +21,7 @@ export function OtpVerificationScreen({
 }: OtpVerificationScreenProps) {
   const [formError, setFormError] = useState<string>('')
   const [countdown, setCountdown] = useState(30)
+  const [isResending, setIsResending] = useState(false)
 
   useEffect(() => {
     if (countdown <= 0) return
@@ -55,8 +56,13 @@ export function OtpVerificationScreen({
 
   const handleResend = async () => {
     setFormError('')
-    await onResend()
-    setCountdown(30)
+    setIsResending(true)
+    try {
+      await onResend()
+      setCountdown(30)
+    } finally {
+      setIsResending(false)
+    }
   }
 
   return (
@@ -128,7 +134,8 @@ export function OtpVerificationScreen({
 
           <Button
             onClick={handleResend}
-            disabled={countdown > 0}
+            disabled={countdown > 0 || isResending}
+            loading={isResending}
             variant="secondary"
             className="w-full"
             type="button"
