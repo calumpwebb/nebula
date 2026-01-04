@@ -19,6 +19,7 @@ import { Route as PublicLoginRouteImport } from './routes/_public/login'
 import { Route as PublicForgotPasswordRouteImport } from './routes/_public/forgot-password'
 import { Route as AuthenticatedThreadsRouteImport } from './routes/_authenticated/threads'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
+import { Route as AuthenticatedThreadsThreadIdRouteImport } from './routes/_authenticated/threads/$threadId'
 
 const PublicRoute = PublicRouteImport.update({
   id: '/_public',
@@ -68,39 +69,47 @@ const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedThreadsThreadIdRoute = AuthenticatedThreadsThreadIdRouteImport.update({
+  id: '/$threadId',
+  path: '/$threadId',
+  getParentRoute: () => AuthenticatedThreadsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/settings': typeof AuthenticatedSettingsRoute
-  '/threads': typeof AuthenticatedThreadsRoute
+  '/threads': typeof AuthenticatedThreadsRouteWithChildren
   '/forgot-password': typeof PublicForgotPasswordRoute
   '/login': typeof PublicLoginRoute
   '/reset-password': typeof PublicResetPasswordRoute
   '/signup': typeof PublicSignupRoute
   '/verify-email': typeof PublicVerifyEmailRoute
   '/': typeof AuthenticatedIndexRoute
+  '/threads/$threadId': typeof AuthenticatedThreadsThreadIdRoute
 }
 export interface FileRoutesByTo {
   '/settings': typeof AuthenticatedSettingsRoute
-  '/threads': typeof AuthenticatedThreadsRoute
+  '/threads': typeof AuthenticatedThreadsRouteWithChildren
   '/forgot-password': typeof PublicForgotPasswordRoute
   '/login': typeof PublicLoginRoute
   '/reset-password': typeof PublicResetPasswordRoute
   '/signup': typeof PublicSignupRoute
   '/verify-email': typeof PublicVerifyEmailRoute
   '/': typeof AuthenticatedIndexRoute
+  '/threads/$threadId': typeof AuthenticatedThreadsThreadIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/_public': typeof PublicRouteWithChildren
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
-  '/_authenticated/threads': typeof AuthenticatedThreadsRoute
+  '/_authenticated/threads': typeof AuthenticatedThreadsRouteWithChildren
   '/_public/forgot-password': typeof PublicForgotPasswordRoute
   '/_public/login': typeof PublicLoginRoute
   '/_public/reset-password': typeof PublicResetPasswordRoute
   '/_public/signup': typeof PublicSignupRoute
   '/_public/verify-email': typeof PublicVerifyEmailRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_authenticated/threads/$threadId': typeof AuthenticatedThreadsThreadIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -113,6 +122,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/verify-email'
     | '/'
+    | '/threads/$threadId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/settings'
@@ -123,6 +133,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/verify-email'
     | '/'
+    | '/threads/$threadId'
   id:
     | '__root__'
     | '/_authenticated'
@@ -135,6 +146,7 @@ export interface FileRouteTypes {
     | '/_public/signup'
     | '/_public/verify-email'
     | '/_authenticated/'
+    | '/_authenticated/threads/$threadId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -214,18 +226,37 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/threads/$threadId': {
+      id: '/_authenticated/threads/$threadId'
+      path: '/$threadId'
+      fullPath: '/threads/$threadId'
+      preLoaderRoute: typeof AuthenticatedThreadsThreadIdRouteImport
+      parentRoute: typeof AuthenticatedThreadsRoute
+    }
   }
 }
 
+interface AuthenticatedThreadsRouteChildren {
+  AuthenticatedThreadsThreadIdRoute: typeof AuthenticatedThreadsThreadIdRoute
+}
+
+const AuthenticatedThreadsRouteChildren: AuthenticatedThreadsRouteChildren = {
+  AuthenticatedThreadsThreadIdRoute: AuthenticatedThreadsThreadIdRoute,
+}
+
+const AuthenticatedThreadsRouteWithChildren = AuthenticatedThreadsRoute._addFileChildren(
+  AuthenticatedThreadsRouteChildren
+)
+
 interface AuthenticatedRouteChildren {
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
-  AuthenticatedThreadsRoute: typeof AuthenticatedThreadsRoute
+  AuthenticatedThreadsRoute: typeof AuthenticatedThreadsRouteWithChildren
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
-  AuthenticatedThreadsRoute: AuthenticatedThreadsRoute,
+  AuthenticatedThreadsRoute: AuthenticatedThreadsRouteWithChildren,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
 }
 
