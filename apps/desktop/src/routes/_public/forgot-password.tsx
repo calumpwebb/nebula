@@ -36,7 +36,7 @@ function ForgotPasswordPage() {
   })
 
   return (
-    <div className="w-full max-w-md">
+    <div className="w-full max-w-sm">
       <form
         onSubmit={(e) => {
           e.preventDefault()
@@ -73,7 +73,7 @@ function ForgotPasswordPage() {
             Send reset code
           </Button>
 
-          <div className="text-center pt-2">
+          <div className="text-center">
             <button
               onClick={() => navigate({ to: '/login' })}
               className="text-sm text-foreground-secondary hover:text-foreground transition-colors"

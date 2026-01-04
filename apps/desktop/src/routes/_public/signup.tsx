@@ -58,7 +58,7 @@ function SignupPage() {
   })
 
   return (
-    <div className="w-full max-w-md">
+    <div className="w-full max-w-sm">
       <form
         onSubmit={(e) => {
           e.preventDefault()
@@ -154,7 +154,7 @@ function SignupPage() {
             Create account
           </Button>
 
-          <div className="text-center pt-2">
+          <div className="text-center">
             <span className="text-sm text-foreground-secondary">Already have an account? </span>
             <button
               onClick={() => navigate({ to: '/login' })}

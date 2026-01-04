@@ -69,7 +69,7 @@
 
   /* ---- UI Elements ---- */
   --ring: 0 0% 9%;                   /* Black focus ring */
-  --radius: 0.375rem;                /* 6px - very subtle rounding */
+  --radius: 10px;                    /* 10px - subtle rounding */
 
   /* ---- Card Shadows ---- */
   --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);

@@ -123,7 +123,7 @@ function ResetPasswordPage() {
   }
 
   return (
-    <div className="w-full max-w-md">
+    <div className="w-full max-w-sm">
       <form
         onSubmit={(e) => {
           e.preventDefault()
@@ -163,18 +163,14 @@ function ResetPasswordPage() {
           )}
         </form.Field>
 
-        {formError && (
-          <p className="mt-4 text-sm text-destructive">
-            {formError}
-          </p>
-        )}
+        {formError && <p className="mt-4 text-sm text-destructive">{formError}</p>}
 
         <div className="mt-6 space-y-3">
           <Button type="submit" variant="primary" disabled={isResetting} className="w-full">
             {isResetting ? 'Resetting...' : 'Reset password'}
           </Button>
 
-          <div className="text-center pt-2">
+          <div className="text-center">
             <button
               onClick={() => {
                 setMode('otp')

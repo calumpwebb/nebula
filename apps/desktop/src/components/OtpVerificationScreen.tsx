@@ -61,7 +61,7 @@ export function OtpVerificationScreen({
   }
 
   return (
-    <div className="w-full max-w-md">
+    <div className="w-full max-w-sm">
       <div className="bg-white rounded-lg shadow-[var(--card-shadow)] p-8">
         <div className="text-center mb-6">
           <h2 className="text-xl font-semibold text-foreground mb-2">Enter verification code</h2>
@@ -119,7 +119,7 @@ export function OtpVerificationScreen({
             {countdown > 0 ? `Resend in ${countdown}s` : 'Resend code'}
           </Button>
 
-          <div className="text-center pt-2">
+          <div className="text-center">
             <button
               onClick={onBack}
               className="text-sm text-foreground-secondary hover:text-foreground transition-colors"
