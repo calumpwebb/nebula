@@ -2,6 +2,7 @@ import { Link, useRouterState } from '@tanstack/react-router'
 import { useState } from 'react'
 import {
   HomeIcon,
+  ChartBarIcon,
   ChatBubbleLeftRightIcon,
   FolderIcon,
   RectangleStackIcon,
@@ -27,6 +28,7 @@ const navSections: NavSection[] = [
   {
     items: [
       { name: 'Home', to: '/', icon: HomeIcon },
+      { name: 'Analytics', to: '/analytics', icon: ChartBarIcon },
       { name: 'Chat', to: '/chat', icon: ChatBubbleLeftRightIcon },
     ],
   },
