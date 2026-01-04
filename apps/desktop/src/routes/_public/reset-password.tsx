@@ -83,6 +83,22 @@ function ResetPasswordPage() {
   }
 
   const handleVerifyOtp = async (otp: string) => {
+    // Verify the OTP is valid before proceeding to password screen
+    const result = await authClient.emailOtp.checkVerificationOtp({
+      email,
+      otp,
+      type: 'forget-password',
+    })
+
+    if (result.error) {
+      return {
+        error: {
+          message: result.error.message || 'Invalid verification code',
+        },
+      }
+    }
+
+    // OTP is valid, proceed to password screen
     setVerifiedOtp(otp)
     setMode('password')
     return
