@@ -30,6 +30,9 @@ function VerifyEmailPage() {
   }
 
   const handleVerify = async (otp: string) => {
+    // Temporary delay for testing loading states
+    await new Promise((resolve) => setTimeout(resolve, 2000))
+
     // Use signIn.emailOtp instead of verifyEmail to both verify AND create session
     const result = await authClient.signIn.emailOtp({
       email,
@@ -49,6 +52,9 @@ function VerifyEmailPage() {
   }
 
   const handleResend = async () => {
+    // Temporary delay for testing loading states
+    await new Promise((resolve) => setTimeout(resolve, 2000))
+
     await authClient.emailOtp.sendVerificationOtp({
       email,
       type: 'sign-in',

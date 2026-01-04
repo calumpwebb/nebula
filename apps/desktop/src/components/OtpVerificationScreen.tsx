@@ -9,7 +9,6 @@ type OtpVerificationScreenProps = {
   onResend: () => Promise<void>
   onBack: () => void
   verifyButtonText?: string
-  verifyingButtonText?: string
 }
 
 export function OtpVerificationScreen({
@@ -19,7 +18,6 @@ export function OtpVerificationScreen({
   onResend,
   onBack,
   verifyButtonText = 'Verify',
-  verifyingButtonText = 'Verifying...',
 }: OtpVerificationScreenProps) {
   const [formError, setFormError] = useState<string>('')
   const [countdown, setCountdown] = useState(30)
@@ -69,10 +67,10 @@ export function OtpVerificationScreen({
           form.handleSubmit()
         }}
         noValidate
-        className="bg-white rounded-lg border border-border shadow-card px-8 pt-8 pb-3"
+        className="bg-white rounded-lg border border-border shadow-card px-8 pt-4 pb-3"
       >
         <div className="text-center mb-6">
-          <h2 className="text-xl font-semibold text-foreground mb-2">Enter verification code</h2>
+          <h2 className="text-2xl font-semibold text-foreground mb-2">Enter verification code</h2>
           <p className="text-sm text-foreground-secondary">
             {description} <span className="font-medium">{email}</span>
           </p>
@@ -120,9 +118,13 @@ export function OtpVerificationScreen({
         </form.Field>
 
         <div className="space-y-3">
-          <Button type="submit" variant="primary" className="w-full">
-            {form.state.isSubmitting ? verifyingButtonText : verifyButtonText}
-          </Button>
+          <form.Subscribe selector={(state) => state.isSubmitting}>
+            {(isSubmitting) => (
+              <Button type="submit" variant="primary" className="w-full" loading={isSubmitting}>
+                {isSubmitting ? 'Verifying...' : verifyButtonText}
+              </Button>
+            )}
+          </form.Subscribe>
 
           <Button
             onClick={handleResend}

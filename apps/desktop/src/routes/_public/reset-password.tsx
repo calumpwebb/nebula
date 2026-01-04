@@ -20,7 +20,6 @@ function ResetPasswordPage() {
   const [mode, setMode] = useState<ResetPasswordMode>('otp')
   const [verifiedOtp, setVerifiedOtp] = useState<string>('')
   const [formError, setFormError] = useState<string>('')
-  const [isResetting, setIsResetting] = useState(false)
 
   useEffect(() => {
     if (session?.user) {
@@ -42,7 +41,8 @@ function ResetPasswordPage() {
     onSubmit: async ({ value }) => {
       setFormError('')
 
-      setIsResetting(true)
+      // Temporary delay for testing loading states
+      await new Promise((resolve) => setTimeout(resolve, 2000))
 
       try {
         const result = await authClient.emailOtp.resetPassword({
@@ -74,8 +74,6 @@ function ResetPasswordPage() {
         }
       } catch {
         setFormError('Failed to reset password')
-      } finally {
-        setIsResetting(false)
       }
     },
   })
@@ -91,6 +89,9 @@ function ResetPasswordPage() {
   }
 
   const handleResendOtp = async () => {
+    // Temporary delay for testing loading states
+    await new Promise((resolve) => setTimeout(resolve, 2000))
+
     await authClient.emailOtp.sendVerificationOtp({
       email,
       type: 'forget-password',
@@ -121,10 +122,10 @@ function ResetPasswordPage() {
           form.handleSubmit()
         }}
         noValidate
-        className="bg-white rounded-lg border border-border shadow-card px-8 pt-8 pb-3"
+        className="bg-white rounded-lg border border-border shadow-card px-8 pt-4 pb-3"
       >
         <div className="text-center mb-6">
-          <h2 className="text-xl font-semibold text-foreground">Set new password</h2>
+          <h2 className="text-2xl font-semibold text-foreground">Set new password</h2>
         </div>
 
         {formError && (
@@ -187,9 +188,13 @@ function ResetPasswordPage() {
         </form.Field>
 
         <div className="mt-6 space-y-3">
-          <Button type="submit" variant="primary" disabled={isResetting} className="w-full">
-            {isResetting ? 'Resetting...' : 'Reset password'}
-          </Button>
+          <form.Subscribe selector={(state) => state.isSubmitting}>
+            {(isSubmitting) => (
+              <Button type="submit" variant="primary" loading={isSubmitting} className="w-full">
+                {isSubmitting ? 'Resetting password...' : 'Reset password'}
+              </Button>
+            )}
+          </form.Subscribe>
 
           <div className="text-center">
             <button

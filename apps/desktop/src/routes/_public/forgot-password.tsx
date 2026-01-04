@@ -20,6 +20,9 @@ function ForgotPasswordPage() {
     onSubmit: async ({ value }) => {
       setFormError('')
 
+      // Temporary delay for testing loading states
+      await new Promise((resolve) => setTimeout(resolve, 2000))
+
       try {
         await authClient.emailOtp.sendVerificationOtp({
           email: value.email,
@@ -44,10 +47,10 @@ function ForgotPasswordPage() {
         }}
         noValidate
         autoComplete="on"
-        className="bg-white rounded-lg border border-border shadow-card px-8 pt-8 pb-3"
+        className="bg-white rounded-lg border border-border shadow-card px-8 pt-4 pb-3"
       >
         <div className="text-center mb-6">
-          <h2 className="text-xl font-semibold text-foreground">Reset password</h2>
+          <h2 className="text-2xl font-semibold text-foreground">Reset password</h2>
         </div>
 
         {formError && (
@@ -84,9 +87,13 @@ function ForgotPasswordPage() {
         </form.Field>
 
         <div className="mt-6 space-y-3">
-          <Button type="submit" variant="primary" className="w-full">
-            Send reset code
-          </Button>
+          <form.Subscribe selector={(state) => state.isSubmitting}>
+            {(isSubmitting) => (
+              <Button type="submit" variant="primary" className="w-full" loading={isSubmitting}>
+                {isSubmitting ? 'Sending...' : 'Send reset code'}
+              </Button>
+            )}
+          </form.Subscribe>
 
           <div className="text-center">
             <button
