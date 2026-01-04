@@ -112,33 +112,31 @@ export function Sidebar() {
         ))}
       </nav>
 
-      {/* Settings and Log out at bottom */}
-      <div className="mt-auto pt-3">
-        <div className="flex items-center gap-2 px-4 py-2.5">
-          <button
-            onClick={handleSignOut}
-            disabled={isSigningOut}
-            className="p-1 rounded-md text-foreground-secondary hover:bg-surface-hover transition-colors disabled:opacity-50"
-            title={isSigningOut ? 'Signing out...' : 'Log out'}
-          >
-            <ArrowLeftOnRectangleIcon className="w-5 h-5" />
-          </button>
+      {/* Settings at bottom */}
+      <div className="mt-auto pt-3 space-y-1">
+        <Link
+          to="/settings"
+          className={`
+            flex items-center gap-3 px-4 py-2.5 rounded-md text-sm font-medium transition-colors
+            ${
+              currentPath === '/settings'
+                ? 'bg-primary text-primary-foreground'
+                : 'text-foreground-secondary hover:bg-surface-hover'
+            }
+          `}
+        >
+          <Cog6ToothIcon className="w-5 h-5" />
+          <span>Settings</span>
+        </Link>
 
-          <Link
-            to="/settings"
-            className={`
-              flex items-center gap-2 flex-1 px-2 py-1 rounded-md text-sm font-medium transition-colors
-              ${
-                currentPath === '/settings'
-                  ? 'bg-primary text-primary-foreground'
-                  : 'text-foreground-secondary hover:bg-surface-hover'
-              }
-            `}
-          >
-            <Cog6ToothIcon className="w-5 h-5" />
-            <span>Settings</span>
-          </Link>
-        </div>
+        <button
+          onClick={handleSignOut}
+          disabled={isSigningOut}
+          className="w-full flex items-center gap-3 px-4 py-2.5 rounded-md text-sm font-medium text-foreground-secondary hover:bg-surface-hover transition-colors disabled:opacity-50"
+        >
+          <ArrowLeftOnRectangleIcon className="w-5 h-5" />
+          <span>{isSigningOut ? 'Signing out...' : 'Log out'}</span>
+        </button>
       </div>
     </div>
   )
