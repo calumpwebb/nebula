@@ -66,6 +66,30 @@ function getVisibleCells(
   return cells
 }
 
+// @ts-expect-error - Scaffold: createSVG will be used in later implementation
+function createSVG(dots: Dot[], windowWidth: number, windowHeight: number): string {
+  const circles = dots
+    .map((d) => `<circle cx="${d.x}" cy="${d.y}" r="${d.radius}" fill="hsl(0, 0%, 97%)" />`)
+    .join('')
+
+  return `data:image/svg+xml,${encodeURIComponent(`
+    <svg xmlns="http://www.w3.org/2000/svg" width="${windowWidth}" height="${windowHeight}">
+      <g transform="translate(${windowWidth / 2}, ${windowHeight / 2})">
+        ${circles}
+      </g>
+    </svg>
+  `)}`
+}
+
+// @ts-expect-error - Scaffold: debounce will be used in later implementation
+function debounce<T extends (...args: never[]) => void>(fn: T, delay: number): T {
+  let timeoutId: ReturnType<typeof setTimeout> | null = null
+  return ((...args: Parameters<T>) => {
+    if (timeoutId) clearTimeout(timeoutId)
+    timeoutId = setTimeout(() => fn(...args), delay)
+  }) as T
+}
+
 export function StippleBackground() {
   // @ts-expect-error - Scaffold: setBackgroundImage will be used in later implementation
   const [backgroundImage, setBackgroundImage] = useState<string>('')

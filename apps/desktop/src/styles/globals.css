@@ -22,7 +22,7 @@
 /* Apple-inspired modern SaaS color system */
 :root {
   /* ---- Backgrounds ---- */
-  --background: 0 0% 99%;            /* Slightest off-white */
+  --background: 0 0% 95%;            /* Light gray background */
   --surface: 0 0% 98%;               /* Subtle off-white for cards/panels */
   --surface-hover: 0 0% 96%;         /* Hover state for interactive surfaces */
 

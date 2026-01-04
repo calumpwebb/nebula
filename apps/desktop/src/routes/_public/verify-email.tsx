@@ -10,7 +10,14 @@ export const Route = createFileRoute('/_public/verify-email')({
 function VerifyEmailPage() {
   const navigate = useNavigate()
   const location = useLocation()
+  const { data: session } = authClient.useSession()
   const email = (location.state as { email?: string } | undefined)?.email || ''
+
+  useEffect(() => {
+    if (session?.user) {
+      navigate({ to: '/' })
+    }
+  }, [session, navigate])
 
   useEffect(() => {
     if (!email) {
@@ -29,10 +36,15 @@ function VerifyEmailPage() {
     })
 
     if (result.error) {
-      return { error: { message: result.error.message || 'Invalid verification code' } }
+      return {
+        error: {
+          message: result.error.message || 'Incorrect code. Please check your email and try again.',
+        },
+      }
     }
-    // Session watcher will navigate to dashboard
-    return
+
+    navigate({ to: '/' })
+    return undefined
   }
 
   const handleResend = async () => {
@@ -45,7 +57,7 @@ function VerifyEmailPage() {
   return (
     <OtpVerificationScreen
       email={email}
-      description="Verification code sent to"
+      description="Please enter the 6 digit code sent to"
       onVerify={handleVerify}
       onResend={handleResend}
       onBack={() => navigate({ to: '/login' })}
