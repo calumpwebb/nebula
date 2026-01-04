@@ -62,7 +62,7 @@ function SignupPage() {
         }}
         noValidate
         autoComplete="on"
-        className="bg-white rounded-lg border border-border shadow-card px-8 pt-4 pb-3"
+        className="bg-white rounded-lg border border-border shadow-card px-8 pt-8 pb-3"
       >
         <div className="text-center mb-6">
           <h2 className="text-2xl font-semibold text-foreground">Create account</h2>
@@ -135,7 +135,11 @@ function SignupPage() {
         <form.Field
           name="password"
           validators={{
-            onChange: ({ value }) => (!value ? 'Required' : undefined),
+            onChange: ({ value }) => {
+              if (!value) return 'Required'
+              if (value.length < 8) return 'Password must be at least 8 characters'
+              return undefined
+            },
           }}
         >
           {(field) => {
