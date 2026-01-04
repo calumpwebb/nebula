@@ -41,6 +41,10 @@ try {
 function App() {
   const { data: session, isPending } = authClient.useSession()
 
+  console.log('[App] isPending:', isPending)
+  console.log('[App] session:', session)
+  console.log('[App] isAuthenticated:', !!session?.user)
+
   return (
     <RouterProvider
       router={router}

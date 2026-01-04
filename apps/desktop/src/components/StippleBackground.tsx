@@ -27,7 +27,8 @@ function generateDotsForCell(cellX: number, cellY: number, cellSize: number): Do
   const seed = hashCode(`${cellX},${cellY}`)
   const random = seededRandom(seed)
 
-  const dotsPerCell = Math.floor((cellSize * cellSize * 0.08) / (Math.PI * 1.5 * 1.5))
+  // Much lower density - about 0.5% coverage instead of 8%
+  const dotsPerCell = Math.floor((cellSize * cellSize * 0.005) / (Math.PI * 1.5 * 1.5))
   const dots: Dot[] = []
 
   for (let i = 0; i < dotsPerCell; i++) {
@@ -64,7 +65,7 @@ function getVisibleCells(
 
 function createSVG(dots: Dot[], windowWidth: number, windowHeight: number): string {
   const circles = dots
-    .map((d) => `<circle cx="${d.x}" cy="${d.y}" r="${d.radius}" fill="hsl(0, 0%, 97%)" />`)
+    .map((d) => `<circle cx="${d.x}" cy="${d.y}" r="${d.radius}" fill="black" />`)
     .join('')
 
   return `data:image/svg+xml,${encodeURIComponent(`
@@ -90,10 +91,16 @@ export function StippleBackground() {
 
   useEffect(() => {
     const generatePattern = () => {
+      console.log('🎨 Generating stipple pattern...')
+      console.log('Window size:', window.innerWidth, 'x', window.innerHeight)
       const cellSize = 500
       const cells = getVisibleCells(window.innerWidth, window.innerHeight, cellSize)
+      console.log('Generated cells:', cells.length)
       const allDots = cells.flatMap(([x, y]) => generateDotsForCell(x, y, cellSize))
+      console.log('Generated dots:', allDots.length)
       const svg = createSVG(allDots, window.innerWidth, window.innerHeight)
+      console.log('SVG length:', svg.length)
+      console.log('SVG preview:', svg.substring(0, 200))
       setBackgroundImage(svg)
     }
 

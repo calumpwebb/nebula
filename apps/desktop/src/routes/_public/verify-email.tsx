@@ -10,7 +10,7 @@ export const Route = createFileRoute('/_public/verify-email')({
 function VerifyEmailPage() {
   const navigate = useNavigate()
   const location = useLocation()
-  const { data: session, refetch } = authClient.useSession()
+  const { data: session } = authClient.useSession()
   const email = (location.state as { email?: string } | undefined)?.email || ''
 
   useEffect(() => {
@@ -30,7 +30,8 @@ function VerifyEmailPage() {
   }
 
   const handleVerify = async (otp: string) => {
-    const result = await authClient.emailOtp.verifyEmail({
+    // Use signIn.emailOtp instead of verifyEmail to both verify AND create session
+    const result = await authClient.signIn.emailOtp({
       email,
       otp,
     })
@@ -43,16 +44,14 @@ function VerifyEmailPage() {
       }
     }
 
-    // Manually refetch session to update client state (better-auth doesn't auto-revalidate)
-    await refetch()
-    // useEffect above will navigate once session loads
+    // Session created, useEffect will handle navigation
     return undefined
   }
 
   const handleResend = async () => {
     await authClient.emailOtp.sendVerificationOtp({
       email,
-      type: 'email-verification',
+      type: 'sign-in',
     })
   }
 

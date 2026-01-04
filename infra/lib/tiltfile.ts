@@ -116,7 +116,9 @@ function generateSetupScriptTilt(def: SetupScriptDefinition, projectRoot: string
   const { name, config } = def
   const parts: string[] = [`  '${name}'`]
 
-  parts.push(`  cmd='${config.cmd}'`)
+  // Escape single quotes and wrap in triple-quoted string for Starlark
+  const escapedCmd = config.cmd.replace(/'/g, "\\'")
+  parts.push(`  cmd='''${escapedCmd}'''`)
 
   // Use cwd if specified, otherwise project root
   const dir = config.cwd ? path.resolve(projectRoot, config.cwd) : projectRoot

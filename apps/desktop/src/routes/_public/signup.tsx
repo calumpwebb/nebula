@@ -39,6 +39,11 @@ function SignupPage() {
       if (result.error) {
         setFormError(result.error.message || 'Sign up failed')
       } else {
+        // Send sign-in OTP (also verifies email when used with signIn.emailOtp)
+        await authClient.emailOtp.sendVerificationOtp({
+          email: value.email,
+          type: 'sign-in',
+        })
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         navigate({ to: '/verify-email', state: { email: value.email } as any })
       }

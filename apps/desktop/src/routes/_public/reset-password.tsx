@@ -15,11 +15,18 @@ type ResetPasswordMode = 'otp' | 'password'
 function ResetPasswordPage() {
   const navigate = useNavigate()
   const location = useLocation()
+  const { data: session } = authClient.useSession()
   const email = (location.state as { email?: string } | undefined)?.email || ''
   const [mode, setMode] = useState<ResetPasswordMode>('otp')
   const [verifiedOtp, setVerifiedOtp] = useState<string>('')
   const [formError, setFormError] = useState<string>('')
   const [isResetting, setIsResetting] = useState(false)
+
+  useEffect(() => {
+    if (session?.user) {
+      navigate({ to: '/' })
+    }
+  }, [session, navigate])
 
   useEffect(() => {
     if (!email) {
@@ -63,7 +70,7 @@ function ResetPasswordPage() {
           if (signInResult.error) {
             navigate({ to: '/login' })
           }
-          // Session watcher will navigate to dashboard
+          // useEffect will navigate to dashboard once session updates
         }
       } catch {
         setFormError('Failed to reset password')
