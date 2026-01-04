@@ -33,21 +33,18 @@ export function Sidebar() {
   const currentPath = router.location.pathname
   const [isSigningOut, setIsSigningOut] = useState(false)
 
-  const handleSignOut = async () => {
-    try {
-      setIsSigningOut(true)
-      await authClient.signOut()
+  const handleSignOut = () => {
+    setIsSigningOut(true)
 
-      // Clear any stored session data
-      localStorage.clear()
-      sessionStorage.clear()
+    // Navigate immediately to prevent flash of unauthenticated UI
+    window.location.href = '/login'
 
-      // Force reload to clear all state
-      window.location.href = '/login'
-    } catch (error) {
-      console.error('[sign-out] Sign out failed:', error)
-      setIsSigningOut(false)
-    }
+    // Clean up session in background (non-blocking)
+    authClient.signOut().catch((error) => {
+      console.error('[sign-out] Sign out cleanup failed:', error)
+    })
+    localStorage.clear()
+    sessionStorage.clear()
   }
 
   return (
