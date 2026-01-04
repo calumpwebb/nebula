@@ -35,6 +35,22 @@ Uses `tauri-plugin-log`. Logs to stdout + platform log dir (macOS: `~/Library/Lo
 | Build      | `just build`                               |
 | Single pkg | `pnpm turbo check --filter=@nebula/worker` |
 
+## Convex Self-Hosted Setup
+
+Admin key **must** be generated using `./generate_admin_key.sh` in the Convex backend container (not manually constructed).
+
+The manifest automatically:
+
+1. Syncs admin key from Convex pod to `.env.local` files on startup
+2. Deploys Convex functions via `npx convex dev --once`
+3. Sets `BETTER_AUTH_SECRET` environment variable
+
+Manual operations:
+
+- Deploy functions: `cd packages/convex && npx convex dev --once`
+- Get admin key: `kubectl exec -n default <convex-pod> -- ./generate_admin_key.sh`
+- Set env var: `npx convex env set VAR_NAME value`
+
 ## Dev UIs
 
 Tilt: localhost:10350 | Temporal: localhost:8080 | Convex: localhost:6791
