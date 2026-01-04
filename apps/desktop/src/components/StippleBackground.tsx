@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-// @ts-expect-error - Scaffold: useEffect will be used in later implementation
 import { useEffect, useState } from 'react'
 
 interface Dot {
@@ -25,7 +23,6 @@ function seededRandom(seed: number): () => number {
   }
 }
 
-// @ts-expect-error - Scaffold: generateDotsForCell will be used in later implementation
 function generateDotsForCell(cellX: number, cellY: number, cellSize: number): Dot[] {
   const seed = hashCode(`${cellX},${cellY}`)
   const random = seededRandom(seed)
@@ -44,7 +41,6 @@ function generateDotsForCell(cellX: number, cellY: number, cellSize: number): Do
   return dots
 }
 
-// @ts-expect-error - Scaffold: getVisibleCells will be used in later implementation
 function getVisibleCells(
   windowWidth: number,
   windowHeight: number,
@@ -66,7 +62,6 @@ function getVisibleCells(
   return cells
 }
 
-// @ts-expect-error - Scaffold: createSVG will be used in later implementation
 function createSVG(dots: Dot[], windowWidth: number, windowHeight: number): string {
   const circles = dots
     .map((d) => `<circle cx="${d.x}" cy="${d.y}" r="${d.radius}" fill="hsl(0, 0%, 97%)" />`)
@@ -81,7 +76,6 @@ function createSVG(dots: Dot[], windowWidth: number, windowHeight: number): stri
   `)}`
 }
 
-// @ts-expect-error - Scaffold: debounce will be used in later implementation
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function debounce<T extends (...args: any[]) => void>(fn: T, delay: number): T {
   let timeoutId: ReturnType<typeof setTimeout> | null = null
@@ -92,8 +86,23 @@ function debounce<T extends (...args: any[]) => void>(fn: T, delay: number): T {
 }
 
 export function StippleBackground() {
-  // @ts-expect-error - Scaffold: setBackgroundImage will be used in later implementation
   const [backgroundImage, setBackgroundImage] = useState<string>('')
+
+  useEffect(() => {
+    const generatePattern = () => {
+      const cellSize = 500
+      const cells = getVisibleCells(window.innerWidth, window.innerHeight, cellSize)
+      const allDots = cells.flatMap(([x, y]) => generateDotsForCell(x, y, cellSize))
+      const svg = createSVG(allDots, window.innerWidth, window.innerHeight)
+      setBackgroundImage(svg)
+    }
+
+    generatePattern()
+
+    const debouncedResize = debounce(generatePattern, 250)
+    window.addEventListener('resize', debouncedResize)
+    return () => window.removeEventListener('resize', debouncedResize)
+  }, [])
 
   return (
     <div
