@@ -51,6 +51,7 @@ function SignupPage() {
       if (result.error) {
         setFormError(result.error.message || 'Sign up failed')
       } else {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         navigate({ to: '/verify-email', state: { email: value.email } as any })
       }
     },
@@ -146,11 +147,7 @@ function SignupPage() {
           }}
         </form.Field>
 
-        {formError && (
-          <p className="mt-4 text-sm text-destructive">
-            {formError}
-          </p>
-        )}
+        {formError && <p className="mt-4 text-sm text-destructive">{formError}</p>}
 
         <div className="mt-4 space-y-3">
           <Button type="submit" variant="primary" className="w-full">
@@ -158,9 +155,7 @@ function SignupPage() {
           </Button>
 
           <div className="text-center pt-2">
-            <span className="text-sm text-foreground-secondary">
-              Already have an account?{' '}
-            </span>
+            <span className="text-sm text-foreground-secondary">Already have an account? </span>
             <button
               onClick={() => navigate({ to: '/login' })}
               className="text-sm text-foreground-secondary hover:text-foreground transition-colors font-medium"
